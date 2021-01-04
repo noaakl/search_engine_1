@@ -2,7 +2,6 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from document import Document
 
-
 class Parse:
 
     def __init__(self):
@@ -46,3 +45,4 @@ class Parse:
         document = Document(tweet_id, tweet_date, full_text, url, retweet_text, retweet_url, quote_text,
                             quote_url, term_dict, doc_length)
         return document
+###hey noaaa
