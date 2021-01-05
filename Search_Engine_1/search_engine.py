@@ -1,9 +1,10 @@
 import pandas as pd
-from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
 from indexer import Indexer
 from searcher import Searcher
+from reader import ReadFile
+from text_processing import TextProcessing
 import utils
 
 # DO NOT CHANGE THE CLASS NAME
@@ -13,9 +14,12 @@ class SearchEngine:
     # You can change the internal implmentation, but you must have a parser and an indexer.
     def __init__(self, config=None):
         self._config = config
+        if config == None:
+            self._config = ConfigClass()
         self._parser = Parse()
         self._indexer = Indexer(config)
         self._model = None
+        self._reader = ReadFile(self._config.get__corpusPath())
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -27,16 +31,17 @@ class SearchEngine:
         Output:
             No output, just modifies the internal _indexer object.
         """
-        df = pd.read_parquet(fn, engine="pyarrow")
-        documents_list = df.values.tolist()
+        documents_list = self._reader.get_next_file()
         # Iterate over every document in the file
         number_of_documents = 0
-        for idx, document in enumerate(documents_list):
-            # parse the document
-            parsed_document = self._parser.parse_doc(document)
-            number_of_documents += 1
-            # index the document data
-            self._indexer.add_new_doc(parsed_document)
+        while (documents_list != None):
+            for idx, document in enumerate(documents_list):
+                # parse the document
+                parsed_document = self._parser.parse_doc(document)
+                number_of_documents += 1
+                # index the document data
+                # self._indexer.add_new_doc(parsed_document)
+            documents_list = self._reader.get_next_file()
         print('Finished parsing and indexing.')
 
     # DO NOT MODIFY THIS SIGNATURE
@@ -72,3 +77,10 @@ class SearchEngine:
         """
         searcher = Searcher(self._parser, self._indexer, model=self._model)
         return searcher.search(query)
+
+if __name__ == '__main__':
+    # reader = ReadFile()
+    search_engine = SearchEngine()
+    search_engine.build_index_from_parquet("benchmark_data_train.snappy.parquet")
+    # text = TextProcessing()
+    # print(text.process_text(['New', 'Harvard', 'study', 'of', '32k', 'COVID19', 'cases', 'in', 'Wuhan', '87', 'of', 'infections', 'were', 'unascertainedpotentially', 'incl', 'asymptomatic', 'amp', 'mild symptomatic', 'R0', 'reproduction', 'number', '3.54', 'in', 'early', 'outbreak', 'close', 'to', 'my', 'first', '3.8', '', 'This', 'much', 'worse', 'than', 'old', 'SARS', 'amp', 'MERS']))

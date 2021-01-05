@@ -2,7 +2,7 @@
 class Document:
 
     def __init__(self, tweet_id, tweet_date=None, full_text=None, url=None, retweet_text=None, retweet_url=None,
-                 quote_text=None, quote_url=None, term_doc_dictionary=None, doc_length=0):
+                 quote_text=None, quote_url=None, term_dict=None, doc_length=0, entity_dict={}, max_f=0):
         """
         :param tweet_id: tweet id
         :param tweet_date: tweet date
@@ -12,8 +12,10 @@ class Document:
         :param retweet_url: retweet url
         :param quote_text: quote text
         :param quote_url: quote url
-        :param term_doc_dictionary: dictionary of term and documents.
+        :param term_dict: dictionary of term and documents
         :param doc_length: doc length
+        :param entity_dict: dictionary of entities and documents
+        :param max_f: the largest frequency of a word
         """
         self.tweet_id = tweet_id
         self.tweet_date = tweet_date
@@ -23,5 +25,17 @@ class Document:
         self.retweet_url = retweet_url
         self.quote_text = quote_text
         self.quote_url = quote_url
-        self.term_doc_dictionary = term_doc_dictionary
+        self.term_dict = term_dict
+        self.entity_dict = entity_dict
         self.doc_length = doc_length
+        self.max_f = max_f
+
+    # the info needed for every doc in doc file
+    def get_doc_info(self):
+        return [self.max_f, self.num_of_uniq_words(), 0]
+
+    # all the words in the doc
+    def num_of_uniq_words(self):
+        return len(self.term_dict) + len(self.entity_dict)
+
+
