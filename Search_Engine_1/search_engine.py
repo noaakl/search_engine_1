@@ -104,4 +104,6 @@ if __name__ == '__main__':
     search_engine.build_index_from_parquet("benchmark_data_train.snappy.parquet")
     # text = TextProcessing()
     # print(text.process_text(['New', 'Harvard', 'study', 'of', '32k', 'COVID19', 'cases', 'in', 'Wuhan', '87', 'of', 'infections', 'were', 'unascertainedpotentially', 'incl', 'asymptomatic', 'amp', 'mild symptomatic', 'R0', 'reproduction', 'number', '3.54', 'in', 'early', 'outbreak', 'close', 'to', 'my', 'first', '3.8', '', 'This', 'much', 'worse', 'than', 'old', 'SARS', 'amp', 'MERS']))
+
+
  # TODO: heyyyyy ophirrrrrrrushhhhh
