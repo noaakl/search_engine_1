@@ -171,6 +171,10 @@ class Parse:
                                 continue
                         elif char == "'" or char == '’':
                             break
+                        elif char == '_' :
+                            if token.startswith('@') or token.startswith('#'):
+                               token_checker += char
+                               continue
                         # token_checker += char
                         tokens.append(token_checker)
                         token_checker = ''

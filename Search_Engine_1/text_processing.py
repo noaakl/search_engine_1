@@ -7,10 +7,13 @@ class TextProcessing:
     names_and_entities_dict = {}  # name : (how many docs, how many times in corpus, )
 
     def __init__(self):
-        self.stop_words = stopwords.words('english')
-        self.stop_words.extend(
-            ['_','``', "''", "'", " ", ":", "?", '.', 'https', '!', ',', '"', '^', '*', '&', ';', '~', 'etc', '-', '+', "=","/",")","("])
-
+        self.stop_words ={}
+        my_stopwords = stopwords.words('english')
+        my_stopwords.extend(
+            [ '^', '*', '&', ';', '~', 'etc',  "=","/",")","("])
+        #more stop word - probably not nesecery '_','``', "''", "'", " ", ":", "?", '.', 'https', '!', ',', '"','-', '+',
+        for w in my_stopwords:
+            self.stop_words[w] = 0
         self.numbers = NumbersProcessor()
         self.entity = Entity()
 
@@ -26,8 +29,6 @@ class TextProcessing:
 
         for i in range(text_tokens_len):
             token = text_tokens[i]
-            # token = token.replace(" ", '')
-            # token_len = len(token)
 
             # check if needs to skip one token
             if skip_one:
@@ -35,18 +36,13 @@ class TextProcessing:
                 continue
 
             # names and entities
-            # if token_len > 1 and token.startswith('-'):
-            #     if token[0] == "-":
-            #         token = token.replace("-", '')
-            #         if token == '':
-            #             continue
             if token[0].isupper():
                 final_entities += self.entity.add_to_my_entities(token, i)
-
 
             # stopWord
             elif token in self.stop_words:
                 continue
+
             # hashtag
             elif token.startswith("#") :
                 tokens, entities = self.split_hashtag(text_tokens[i])
@@ -62,27 +58,11 @@ class TextProcessing:
                     processed_token, skip_one = self.numbers.process_numbers(token)
                 final_tokens += processed_token
 
-            # # urls
-            # elif token.startswith('//', 0, 2):
-            #     continue
-            # chuku
-            # elif token.__contains__("'"):
-            #     continue
             # word
             else:
                 final_tokens.append(token)
                 skip_one = False
-                # if token.__contains__('/'):
-                #     for word in token.split('/'):
-                #         if word: final_tokens.append(word.lower())
-                # elif token.__contains__('-'):
-                #     for word in token.split('-'):
-                #         if word: final_tokens.append(word.lower())
-                # elif token:
-                #     final_tokens.append(token)
 
-        # if self.entity.get_last_entity():
-        #     final_entities += self.entity.get_entities()
         self.entity.clear_entities()
         return final_tokens, final_entities
 
