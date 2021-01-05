@@ -31,10 +31,10 @@ class Document:
 
     # the info needed for every doc in doc file
     def get_doc_info(self):
-        return [self.max_f, self.num_of_uniq_words(), 0]
+        return [self.max_f, self.get_num_of_uniq_words(), 0]
 
     # all the words in the doc
-    def num_of_uniq_words(self):
+    def get_num_of_uniq_words(self):
         return len(self.term_doc_dictionary) + len(self.entity_dict)
 
 

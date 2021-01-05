@@ -3,7 +3,7 @@ import math
 
 def get_info_for_posting(word, document, is_term):
     if is_term:
-        df = document.term_dict[word.lower()]
+        df = document.term_doc_dictionary[word.lower()]
     else:
         df = document.entity_dict[word.upper()]
     tf = int(df) / document.get_num_of_uniq_words()
@@ -83,12 +83,12 @@ class Indexer:
             self.inverted_idx[term.lower()] = [1, doc_term_dict[term]]
 
         # Update posting dict
+        info = get_info_for_posting(term, document, True)
         if term.lower() in self.postingDict:  # term is already in postingDict
-            self.postingDict[term.lower()][document.tweet_id] = \
-                get_info_for_posting(term, document, True)
+            self.postingDict[term.lower()][document.tweet_id] = info
         else:  # add new term to postingDict
-            self.postingDict[term.lower()] = \
-                {document.tweet_id: get_info_for_posting(term, document, True)}
+            self.postingDict[term.lower()] = {}
+            self.postingDict[term.lower()][document.tweet_id] = info
 
         # change term from upper to lower case in inverted_idx
         if change_upper_to_lower:
