@@ -1,4 +1,4 @@
-
+#TODO: hey noaaaa
 class Document:
 
     def __init__(self, tweet_id, tweet_date=None, full_text=None, url=None, retweet_text=None, retweet_url=None,
