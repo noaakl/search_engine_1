@@ -8,9 +8,11 @@ if __name__ == '__main__':
     import timeit
     import importlib
     import logging
+
     logging.basicConfig(filename='part_c_tests.log', level=logging.DEBUG,
                         filemode='w', format='%(levelname)s %(asctime)s: %(message)s')
     import metrics
+
 
     def test_file_exists(fn):
         if os.path.exists(fn):
@@ -18,7 +20,10 @@ if __name__ == '__main__':
         logging.error(f'{fn} does not exist.')
         return False
 
+
     tid_ptrn = re.compile('\d+')
+
+
     def invalid_tweet_id(tid):
         if not isinstance(tid, str):
             tid = str(tid)
@@ -28,7 +33,7 @@ if __name__ == '__main__':
 
     bench_data_path = os.path.join('data', 'benchmark_data_train.snappy.parquet')
     bench_lbls_path = os.path.join('data', 'benchmark_lbls_train.csv')
-    queries_path    = os.path.join('data', 'queries_train.tsv')
+    queries_path = os.path.join('data', 'queries_train.tsv')
 
     start = datetime.now()
     try:
@@ -41,7 +46,7 @@ if __name__ == '__main__':
             logging.error("Benchmark data does exist under the 'data' folder.")
             sys.exit(-1)
         else:
-            bench_lbls = pd.read_csv(bench_lbls_path, 
+            bench_lbls = pd.read_csv(bench_lbls_path,
                 dtype={'query': int, 'tweet': str, 'y_true': int})
 
         # is queries file under data?
@@ -49,19 +54,19 @@ if __name__ == '__main__':
         if not test_file_exists(queries_path):
             logging.error("Queries data not found ~> skipping some tests.")
         else:
-            queries = pd.read_csv(os.path.join('data', 'queries_train.tsv'), sep='\t')
+            queries = pd.read_csv(os.path.join('../data', 'queries_train.tsv'), sep='\t')
 
         # test for each search engine module
-        engine_modules = ['search_engine_' + name for name in ['1','2','best']]
+        engine_modules = ['search_engine_' + name for name in ['1', '2', 'best']]
         for engine_module in engine_modules:
             try:
                 # does the module file exist?
-                if not test_file_exists(engine_module+'.py'):
+                if not test_file_exists(engine_module + '.py'):
                     continue
                 # try importing the module
                 se = importlib.import_module(engine_module)
                 engine = se.SearchEngine()
-                
+
                 # test building an index and doing so in <1 minute
                 build_idx_time = timeit.timeit(
                     "engine.build_index_from_parquet(bench_data_path)",
@@ -78,8 +83,9 @@ if __name__ == '__main__':
                     logging.error('basic query for the word bioweapon returned no results')
                 else:
                     invalid_tweet_ids = [doc_id for doc_id in res if invalid_tweet_id(doc_id)]
-                    if len(invalid_tweet_ids)>0:
-                        logging.error("the query 'bioweapon' returned results that are not valid tweet ids: "+str(invalid_tweet_ids[:10]))
+                    if len(invalid_tweet_ids) > 0:
+                        logging.error("the query 'bioweapon' returned results that are not valid tweet ids: " + str(
+                            invalid_tweet_ids[:10]))
 
                 # run multiple queries and test that no query takes > 10 seconds
                 queries_results = []
@@ -96,32 +102,34 @@ if __name__ == '__main__':
                             logging.error(f"Query {q_id} with keywords '{q_keywords}' returned no results.")
                         else:
                             invalid_tweet_ids = [doc_id for doc_id in q_res if invalid_tweet_id(doc_id)]
-                            if len(invalid_tweet_ids)>0:
-                                logging.error(f"Query  {q_id} returned results that are not valid tweet ids: "+str(invalid_tweet_ids[:10]))
-                            queries_results.extend([(q_id, str(doc_id)) for doc_id in q_res if not invalid_tweet_ids(doc_id)])
+                            if len(invalid_tweet_ids) > 0:
+                                logging.error(f"Query  {q_id} returned results that are not valid tweet ids: " + str(
+                                    invalid_tweet_ids[:10]))
+                            queries_results.extend(
+                                [(q_id, str(doc_id)) for doc_id in q_res if not invalid_tweet_ids(doc_id)])
                         if q_time > 10:
                             logging.error(f"Query {q_id} with keywords '{q_keywords}' took more than 10 seconds.")
                 queries_results = pd.DataFrame(queries_results, columns=['query', 'tweet'])
 
                 # merge query results with labels benchmark
                 q_results_labeled = None
-                if bench_lbls is not None and len(queries_results)>0:
+                if bench_lbls is not None and len(queries_results) > 0:
                     q_results_labeled = pd.merge(queries_results, bench_lbls,
-                        on=['query','tweet'], how='left', suffixes=None)
+                                                 on=['query', 'tweet'], how='left', suffixes=None)
                     q_results_labeled.rename(columns={'y_true': 'label'})
-                
+
                 # test that MAP > 0
                 if q_results_labeled is not None:
                     results_map = metrics.map(q_results_labeled)
                     if results_map <= 0 or results_map > 1:
                         logging.error(f'Search results MAP value out of range: {results_map}.')
-                
+
                 # test that the average across queries of precision, 
                 # precision@5, precision@10, precision@50, and recall 
                 # is in (0,1).
-                
+
                 if engine_module == 'search_engine_best' and \
-                    test_file_exists('idx_bench.pkl'):
+                        test_file_exists('idx_bench.pkl'):
                     logging.debug('idx_bench.pkl found!')
                     engine.load_index('idx_bench.pkl')
 

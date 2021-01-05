@@ -1,12 +1,13 @@
 import pandas as pd
+from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
 from indexer import Indexer
 from searcher import Searcher
-from reader import ReadFile
-from text_processing import TextProcessing
 import utils
-#TODO: hey noaaaa
+import json
+
+
 
 # DO NOT CHANGE THE CLASS NAME
 class SearchEngine:
@@ -14,9 +15,10 @@ class SearchEngine:
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation, but you must have a parser and an indexer.
     def __init__(self, config=None):
-        self._config = config
-        if config == None:
+        if not config:
             self._config = ConfigClass()
+        else:
+            self._config = config
         self._parser = Parse()
         self._indexer = Indexer(config)
         self._model = None
@@ -32,17 +34,33 @@ class SearchEngine:
         Output:
             No output, just modifies the internal _indexer object.
         """
-        documents_list = self._reader.get_next_file()
+        df = pd.read_parquet(fn, engine="pyarrow")
+        documents_list = df.values.tolist()
+        # documents_list = self._reader.get_next_file()  # TODO: from old maybe delete
         # Iterate over every document in the file
         number_of_documents = 0
-        while (documents_list != None):
-            for idx, document in enumerate(documents_list):
-                # parse the document
-                parsed_document = self._parser.parse_doc(document)
-                number_of_documents += 1
-                # index the document data
-                # self._indexer.add_new_doc(parsed_document)
-            documents_list = self._reader.get_next_file()
+        # while (documents_list != None):  # TODO: from old maybe delete
+        for idx, document in enumerate(documents_list):
+            # parse the document
+            parsed_document = self._parser.parse_doc(document)
+            if not parsed_document:  # TODO: from old check if necessary
+                continue
+            number_of_documents += 1
+            # index the document data
+            self._indexer.add_new_doc(parsed_document)
+        # documents_list = self._reader.get_next_file()  # TODO: from old maybe delete
+
+        self._indexer.check_pending_list()
+        self._indexer.calculate_and_add_idf()
+
+        # save inverted index
+        with open("inverted_index.json", 'w') as json_file:
+            json.dump(self._indexer.inverted_idx, json_file)
+
+        # save posting dict
+        with open("posting_file.json", 'w') as json_file:
+            json.dump(self._indexer.postingDict, json_file)
+
         print('Finished parsing and indexing.')
 
     # DO NOT MODIFY THIS SIGNATURE
