@@ -20,9 +20,10 @@ class Parse:
             self.punctuation[item] = 0
         self.punctuation.pop('#')
         self.punctuation.pop('@')
+        self.punctuation.pop('%')
         self.stop_words = stopwords.words('english')
-        self.stop_words.extend(
-            ['_','``', "''", "'", " ", ":", "?", '.', 'https', '!', ',', '"', '^', '*', '&', ';', '~', 'etc', '-', '+', "=","/",")","("])
+        # self.stop_words.extend(
+            # ['_','``', "''", "'", " ", ":", "?", '.', 'https', '!', ',', '"', '^', '*', '&', ';', '~', 'etc', '-', '+', "=","/",")","("])
 
     def parse_sentence(self, text):
         """
@@ -30,9 +31,9 @@ class Parse:
         :param text: string of the full text of a document
         :return: processed_text: list of terms, entities: list of entities
         """
-        print(text)
+        # print(text)
         text_tokens = self.tokenize_text(text)
-        print("after tokenize: " ,text_tokens)
+        # print("after tokenize: " ,text_tokens)
         if not text_tokens: return [], []
         processed_text, entities = self.text_processing.process_text(text_tokens)
         return processed_text, entities
@@ -113,10 +114,10 @@ class Parse:
         # create doc
         document = Document(tweet_id, tweet_date, full_text, url, retweet_text, retweet_url, quote_text,
                             quote_url, term_dict, doc_length, entity_dict, max_f)
-        print("document Id : " +tweet_id)
-        print("entities : " + str(entity_dict))
-        print("terms : " + str(term_dict))
-        print("*********************************************************")
+        # print("document Id : " +tweet_id)
+        # print("entities : " + str(entity_dict))
+        # print("terms : " + str(term_dict))
+        # print("*********************************************************")
 
         return document
 
@@ -187,6 +188,3 @@ class Parse:
                 tokens.append(token_checker)
         # tokens = [ for t in tokens]
         return tokens
-
-parse = Parse()
-print(parse.parse_sentence('RT @gtconway3d: A better catchphrase for 2020 would be “Return to Sanity” #ReturnToSanity'))
