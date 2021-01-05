@@ -1,7 +1,6 @@
 import pandas as pd
 from functools import reduce
-import sys
-from random import randint
+
 
 # precision(df, True, 1) == 0.5
 # precision(df, False, None) == 0.5
@@ -15,9 +14,10 @@ def precision(df, single=False, query_number=None):
     """
     if single:
         df2 = df[df['query'] == query_number]
-        return df2['label'].mean()
+        return df2['y_true'].mean()
     else:
-        return df.groupby('query')['label'].mean().mean()
+        return df.groupby('query')['y_true'].mean().mean()
+
 
 def recall_single(df, num_of_relevant, query_number):
     """
@@ -27,8 +27,9 @@ def recall_single(df, num_of_relevant, query_number):
         :param query_number: Integer/None that tell on what query_number to evaluate precision or None for the entire DataFrame
         :return: Double - The recall
     """
-    df2 = df[df['query'] == query_number][:num_of_relevant]
-    return df2['label'].sum() / num_of_relevant
+    df2 = df[df['query'] == query_number]
+    return df2['y_true'].sum() / num_of_relevant
+
 
 # recall(df, {1:2}, True) == 0.5
 # recall(df, {1:2, 2:3, 3:1}, False) == 0.388
@@ -45,6 +46,7 @@ def recall(df, num_of_relevant):
         rec += recall_single(df, relevant, query_number)
     return rec / len(num_of_relevant)
 
+
 # precision_at_n(df, 1, 2) == 0.5
 # precision_at_n(df, 3, 1) == 0
 def precision_at_n(df, query_number=1, n=5):
@@ -57,6 +59,7 @@ def precision_at_n(df, query_number=1, n=5):
     """
     return precision(df[df['query'] == query_number][:n], True, query_number)
 
+
 # map(df) == 2/3
 def map(df):
     """
@@ -65,9 +68,9 @@ def map(df):
         :return: Double: the average precision of the df
     """
     acc = 0
-    split_df = [pd.DataFrame(y).reset_index() for x, y in df.groupby('query', as_index=True)]
-    indices = [sdf.index[sdf['labl'] == 1].tolist() for sdf in split_df]
-    for indexes, i in zip(indices, range(len(split_df))):
-        pres = [precision_at_n(split_df[i], i + 1, index + 1) for index in indexes]
+    split_df = [pd.DataFrame(y).reset_index() for x, y in df.groupby('query', as_index=True) if len(y)>0]
+    indices = [sdf.index[sdf['y_true'] == 1].tolist() for sdf in split_df]
+    for i, indexes in enumerate(indices):
+        pres = [precision_at_n(split_df[i], split_df[i]['query'][0], index + 1) for index in indexes]
         acc += reduce(lambda a, b: a + b, pres) / len(indexes) if len(pres) > 0 else 0
     return acc / len(split_df)

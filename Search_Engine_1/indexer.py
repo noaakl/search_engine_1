@@ -41,13 +41,13 @@ class Indexer:
             try:
                 self.add_term(document, term)
             except:
-                print('problem with the following key {}'.format(term[0]))
+                print('problem with the following key {}'.format(term))
 
         for entity in doc_entity_dict:
             try:
                 self.add_entity(document, entity)
             except:
-                print('problem with the following key {}'.format(entity[0]))
+                print('problem with the following key {}'.format(entity))
 
         # self.postingDict[term].append((document.tweet_id, doc_term_dict[term])) TODO: check if ok or change to this format
 
@@ -62,6 +62,8 @@ class Indexer:
         :param document: curr document.
         :return: -
         """
+        if term == "fuck":
+            noaa = 'stop'
         doc_term_dict = document.term_doc_dictionary
         # Update inverted index
         change_upper_to_lower = False

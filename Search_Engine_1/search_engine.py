@@ -97,13 +97,19 @@ class SearchEngine:
         return searcher.search(query)
 
 
-# def main():
-if __name__ == '__main__':
-    # reader = ReadFile()
-    search_engine = SearchEngine()
-    search_engine.build_index_from_parquet("benchmark_data_train.snappy.parquet")
-    # text = TextProcessing()
-    # print(text.process_text(['New', 'Harvard', 'study', 'of', '32k', 'COVID19', 'cases', 'in', 'Wuhan', '87', 'of', 'infections', 'were', 'unascertainedpotentially', 'incl', 'asymptomatic', 'amp', 'mild symptomatic', 'R0', 'reproduction', 'number', '3.54', 'in', 'early', 'outbreak', 'close', 'to', 'my', 'first', '3.8', '', 'This', 'much', 'worse', 'than', 'old', 'SARS', 'amp', 'MERS']))
+def main():
+    config = ConfigClass()
+    search_engine = SearchEngine(config)
+    search_engine.build_index_from_parquet(r'C:\Users\noaa\pycharm projects\search_engine_partC\Search_Engine_1\data\benchmark_data_train.snappy.parquet')
 
+
+
+# if __name__ == '__main__':
+#     # reader = ReadFile()
+#     search_engine = SearchEngine()
+#     search_engine.build_index_from_parquet("benchmark_data_train.snappy.parquet")
+#     # text = TextProcessing()
+#     # print(text.process_text(['New', 'Harvard', 'study', 'of', '32k', 'COVID19', 'cases', 'in', 'Wuhan', '87', 'of', 'infections', 'were', 'unascertainedpotentially', 'incl', 'asymptomatic', 'amp', 'mild symptomatic', 'R0', 'reproduction', 'number', '3.54', 'in', 'early', 'outbreak', 'close', 'to', 'my', 'first', '3.8', '', 'This', 'much', 'worse', 'than', 'old', 'SARS', 'amp', 'MERS']))
+#
 
  # TODO: heyyyyy ophirrrrrrrushhhhh

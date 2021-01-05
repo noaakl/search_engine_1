@@ -35,6 +35,6 @@ class Document:
 
     # all the words in the doc
     def num_of_uniq_words(self):
-        return len(self.term_dict) + len(self.entity_dict)
+        return len(self.term_doc_dictionary) + len(self.entity_dict)
 
 
