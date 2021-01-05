@@ -70,10 +70,6 @@ class Parse:
 
         # create term dict for the doc
         for term in tokenized_text + self.parse_url(url):
-            # if not term or term.lower() in self.stop_words:
-            #     continue
-            # if term.isalpha() and len(term) < 2:
-            #     continue
             if needs_to_stem: term = self.stemmer.stem_term(term)
             if term.lower() not in term_dict:
                 term_dict[term.lower()] = 1
@@ -86,11 +82,7 @@ class Parse:
 
         # create entity dict for the doc
         for entity in entities:
-
-            # elif entity.isalpha() and len(entity) < 2:
-            #     continue
             if needs_to_stem: entity = self.stemmer.stem_term(entity)
-
             # if the entity is term- add to term dict
             if entity.lower() in term_dict:
                 term_dict[entity.lower()] += 1
@@ -99,9 +91,6 @@ class Parse:
                     max_f = term_dict[entity.lower()]
                 continue
 
-            # if the entity is entity- add to entity dict
-            # if entity.lower() in self.stop_words:
-            #     continue
             if entity.upper() not in entity_dict:
                 entity_dict[entity.upper()] = 1
             else:
