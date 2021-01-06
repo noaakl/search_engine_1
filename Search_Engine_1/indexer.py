@@ -1,5 +1,7 @@
 import math
 
+import utils
+
 
 def get_info_for_posting(word, document, is_term):
     if is_term:
@@ -36,6 +38,7 @@ class Indexer:
 
         doc_term_dict = document.term_doc_dictionary
         doc_entity_dict = document.entity_dict
+
         # Go over each term in the doc
         for term in doc_term_dict.keys():
             try:
@@ -50,8 +53,8 @@ class Indexer:
                 print('problem with the following key {}'.format(entity))
 
         # self.postingDict[term].append((document.tweet_id, doc_term_dict[term])) TODO: check if ok or change to this format
-
-        self.doc_file[document.tweet_id] = document.get_doc_info()
+        doc_term_dict.update(doc_entity_dict)
+        self.doc_file[document.tweet_id] = doc_term_dict
         Indexer.num_of_docs += 1
 
     def add_term(self, document, term):
@@ -62,8 +65,8 @@ class Indexer:
         :param document: curr document.
         :return: -
         """
-        if term == "fuck":
-            noaa = 'stop'
+        # if term == "fuck":
+        #     noaa = 'stop'
         doc_term_dict = document.term_doc_dictionary
         # Update inverted index
         change_upper_to_lower = False
@@ -84,6 +87,7 @@ class Indexer:
 
         # Update posting dict
         info = get_info_for_posting(term, document, True)
+
         if term.lower() in self.postingDict:  # term is already in postingDict
             self.postingDict[term.lower()][document.tweet_id] = info
         else:  # add new term to postingDict
@@ -156,7 +160,15 @@ class Indexer:
         Input:
             fn - file name of pickled index.
         """
-        raise NotImplementedError
+        return utils.load_obj(fn)
+
+    def save_index(self, fn):
+        """
+        Saves a pre-computed index (or indices) so we can save our work.
+        Input:
+              fn - file name of pickled index.
+        """
+        utils.save_obj(self.inverted_idx, fn)
 
     # feel free to change the signature and/or implmentation of this function 
     # or drop altogether.
@@ -172,7 +184,39 @@ class Indexer:
         """
         Return the posting list from the index for a term.
         """
-        return self.postingDict[term] if self._is_term_exist(term) else []
+        try:
+            result =  self.postingDict[term]
+            return result
+        except:
+            return {}
+
+
+    def get_doc_information(self, doc_id):
+        try:
+            result = self.doc_file[doc_id]
+            return result
+        except:
+            return {}
+
+    def get_index(self):
+        return self.inverted_idx
+    def calculate_sigma_Wij(self):
+        for doc_id , term_dict  in self.doc_file.items():
+            num_of_uniqe_words = len(term_dict)
+            sigma_Wij = 0
+            for term in term_dict:
+
+                try:
+                    # compute sigma Wij
+                    sigma_Wij += math.pow(
+                        self.inverted_idx[term.lower()][2] * term_dict[term]/num_of_uniqe_words, 2)
+                except:
+                    try:
+                        sigma_Wij += math.pow(
+                            self.inverted_idx[term.upper()][2] * term_dict[term]/num_of_uniqe_words, 2)
+                    except:
+                        pass
+            self.doc_file[doc_id] = sigma_Wij
 
     def check_pending_list(self):
         for entity in self.entities.keys():

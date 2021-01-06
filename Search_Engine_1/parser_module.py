@@ -6,7 +6,17 @@ import configuration
 from document import Document
 import stemmer
 from text_processing import TextProcessing
-
+shortcuts = {"aint": 'is not', "arent": 'are not', "cant": 'cannot', "cantve": 'cannot have', 'cause': 'because', "couldve": 'could have', "couldnt": 'could not',
+"couldntve": 'could not have', "didnt": 'did not', "doesnt": 'does not', "dont": 'do not', "hadnt": 'had not', "hadntve": 'had not have', "hasnt": 'has not',
+"havent": 'have not', "hed": 'he had', "hes": 'he is', "howll": 'how will', "hows": 'how is', "Id": 'I would', "Ill": 'I will', "Im": 'I am', "Ive": 'I have', "isnt":'is not',
+"itd": 'it had', "itll": 'it will', "its": 'it is', "lets": 'let us', "maam": 'madam', "maynt": 'may not', "mightve": 'might have', "mightnt": 'might not', "mustve": 'must have',
+"mustnt": 'must not', "mustntve": 'must not have', "neednt": 'need not', "needntve": 'need not have', "oclock": 'of the clock', "shant": 'shall not', "shed": 'she had'
+, "shes": 'she is', "shouldve": 'should have', "shouldnt": 'should not', "sove": 'so have',  "thatd": 'that would',  "thats": 'that is', "thered": 'there would',
+"theres":'there is', "theyd": 'they would', "theyll": 'they will',"theyre": 'they are', "theyve": 'they have', "wasnt": 'was not', "well": 'we will',
+ "we've": 'we have', "weren't": 'were not', "whatll": 'what will', "whatre": 'what are', "whats": 'what is', "whatve": 'what have'
+, "whens": 'when is', "wheres": 'where is', "who'll": 'who will',  "whos": 'who is', "willve": 'will have', "wont": 'will not',
+ "wouldve": 'would have', "wouldnt": 'would not',"yall": 'you all',
+ "youd": 'you would', "youll": 'you will',  "youre": 'you are', "youve": 'you have'}
 
 class Parse:
 
@@ -61,9 +71,6 @@ class Parse:
         term_dict = {}
         entity_dict = {}
         max_f = 0
-
-        if tweet_id =='1284603170296143872':
-            print("")
         # parse
         tokenized_text, entities = self.parse_sentence(full_text)
         if tokenized_text == [] and entities == []: return
@@ -71,10 +78,6 @@ class Parse:
 
         # create term dict for the doc
         for term in tokenized_text + self.parse_url(url):
-            # if not term or term.lower() in self.stop_words:
-            #     continue
-            # if term.isalpha() and len(term) < 2:
-            #     continue
             if needs_to_stem: term = self.stemmer.stem_term(term)
             if term.lower() not in term_dict:
                 term_dict[term.lower()] = 1
@@ -87,9 +90,6 @@ class Parse:
 
         # create entity dict for the doc
         for entity in entities:
-
-            # elif entity.isalpha() and len(entity) < 2:
-            #     continue
             if needs_to_stem: entity = self.stemmer.stem_term(entity)
 
             # if the entity is term- add to term dict
@@ -100,9 +100,6 @@ class Parse:
                     max_f = term_dict[entity.lower()]
                 continue
 
-            # if the entity is entity- add to entity dict
-            # if entity.lower() in self.stop_words:
-            #     continue
             if entity.upper() not in entity_dict:
                 entity_dict[entity.upper()] = 1
             else:
@@ -135,7 +132,7 @@ class Parse:
         # print(first_tokens)
         if first_tokens[0].lower() == 'rt' : first_tokens.pop(0)
         for token in first_tokens:
-
+            flag =0
             if 'http' in token:
                 continue
             token_checker = ''
@@ -149,13 +146,6 @@ class Parse:
 
 
                     elif len(token_checker) > 0:
-                        # if token_checker[len(token_checker) - 1] == '-':
-                        #     token_checker = token_checker[0:len(token_checker) - 1]
-                        #     tokens.append(token_checker)
-                        #     token_checker = ''
-                        #     tokens.append('-')
-                        #     tokens.append(char)
-                        #     continue
                         if char == ',' and token_checker[len(token_checker)-1].isdigit() :
                             continue
                         if char == '-':
@@ -185,6 +175,9 @@ class Parse:
                     token_checker += char
 
             if len(token_checker) > 1:
-                tokens.append(token_checker)
-        # tokens = [ for t in tokens]
+                if token_checker.lower() in shortcuts:
+                    tokens += shortcuts[token_checker.lower()].split()
+                else:
+                    tokens.append(token_checker)
+
         return tokens

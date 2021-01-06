@@ -5,6 +5,8 @@ from parser_module import Parse
 from indexer import Indexer
 from searcher import Searcher
 import utils
+import json
+from spell_checker import Spell_Checker
 
 
 # DO NOT CHANGE THE CLASS NAME
@@ -13,13 +15,17 @@ class SearchEngine:
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implementation, but you must have a parser and an indexer.
     def __init__(self, config=None):
-        self._config = config
+        if not config:
+            self._config = ConfigClass()
+        else:
+            self._config = config
         self._parser = Parse()
         self._indexer = Indexer(config)
         self._model = None
+        self._reader = ReadFile(self._config.get__corpusPath())
 
     # DO NOT MODIFY THIS SIGNATURE
-    # You can change the internal implementation as you see fit.
+    # You can change the internal implmentation as you see fit.
     def build_index_from_parquet(self, fn):
         """
         Reads parquet file and passes it to the parser, then indexer.
@@ -30,18 +36,35 @@ class SearchEngine:
         """
         df = pd.read_parquet(fn, engine="pyarrow")
         documents_list = df.values.tolist()
+        # documents_list = self._reader.get_next_file()  # TODO: from old maybe delete
         # Iterate over every document in the file
         number_of_documents = 0
+        # while (documents_list != None):  # TODO: from old maybe delete
         for idx, document in enumerate(documents_list):
             # parse the document
             parsed_document = self._parser.parse_doc(document)
+            if not parsed_document:  # TODO: from old check if necessary
+                continue
             number_of_documents += 1
             # index the document data
             self._indexer.add_new_doc(parsed_document)
+        # documents_list = self._reader.get_next_file()  # TODO: from old maybe delete
+
+        self._indexer.check_pending_list()
+        self._indexer.calculate_and_add_idf()
+        self._indexer.calculate_sigma_Wij()
+        # save inverted index
+        with open("inverted_index.json", 'w') as json_file:
+            json.dump(self._indexer.inverted_idx, json_file)
+
+        # save posting dict
+        with open("posting_file.json", 'w') as json_file:
+            json.dump(self._indexer.postingDict, json_file)
+
         print('Finished parsing and indexing.')
 
     # DO NOT MODIFY THIS SIGNATURE
-    # You can change the internal implementation as you see fit.
+    # You can change the internal implmentation as you see fit.
     def load_index(self, fn):
         """
         Loads a pre-computed index (or indices) so we can answer queries.
@@ -51,7 +74,7 @@ class SearchEngine:
         self._indexer.load_index(fn)
 
     # DO NOT MODIFY THIS SIGNATURE
-    # You can change the internal implementation as you see fit.
+    # You can change the internal implmentation as you see fit.
     def load_precomputed_model(self, model_dir=None):
         """
         Loads a pre-computed model (or models) so we can answer queries.
@@ -60,9 +83,7 @@ class SearchEngine:
         """
         pass
 
-    # DO NOT MODIFY THIS SIGNATURE
-    # You can change the internal implementation as you see fit.
-    def search(self, query):
+    def search(self, query,k = None):
         """
         Executes a query over an existing index and returns the number of
         relevant docs and an ordered list of search results.
@@ -73,5 +94,19 @@ class SearchEngine:
             a list of tweet_ids where the first element is the most relavant
             and the last is the least relevant result.
         """
+
         searcher = Searcher(self._parser, self._indexer, model=self._model)
-        return searcher.search(query)
+        return searcher.search(query, k)
+
+
+def main():
+    config = ConfigClass()
+    search_engine = SearchEngine(config)
+    # r'C:\Users\noaa\pycharm projects\search_engine_partC\Search_Engine_1\data\benchmark_data_train.snappy.parquet'#
+    search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\benchmark_data_train.snappy.parquet')
+    # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-16.snappy.parquet')
+    # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-19.snappy.parquet')
+    results =search_engine.search("covid is fun 2020 US new  wear", 40)
+    for res in results[1]:
+        print(res)
+

@@ -1,3 +1,10 @@
+us_state_abbrev = {
+    'AL': 'Alabama','AK': 'Alaska','AZ': 'Arizona','AR': 'Arkansas','CA': 'California','CO': 'Colorado','CT': 'Connecticut','DE': 'Delaware','FL': 'Florida','GA': 'Georgia','HI': 'Hawaii','ID': 'Idaho','IL': 'Illinois','IN': 'Indiana',
+    'IA': 'Iowa','KS': 'Kansas','KY': 'Kentucky','LA': 'Louisiana','ME': 'Maine','MD': 'Maryland','MA': 'Massachusetts','MI': 'Michigan','MN': 'Minnesota','MS': 'Mississippi','MO': 'Missouri',
+    'MT': 'Montana','NE': 'Nebraska','NV': 'Nevada','NH': 'New Hampshire','NJ': 'New Jersey','NM': 'New Mexico','NY': 'New York','NC': 'North Carolina','ND': 'North Dakota',
+    'OH': 'Ohio','OK': 'Oklahoma','OR': 'Oregon','PA': 'Pennsylvania','RI': 'Rhode Island','SC': 'South Carolina','SD': 'South Dakota','TN': 'Tennessee','TX': 'Texas','UT': 'Utah',
+    'VT': 'Vermont','VA': 'Virginia','WA': 'Washington','WV': 'West Virginia','WI': 'Wisconsin','WY': 'Wyoming','US': 'United States'
+}
 
 class Entity:
 
@@ -11,56 +18,27 @@ class Entity:
         :param token: entity to parse
         :param index: the index which token in full text document
         """
-        # if token[0] == '@':
-        #     token = token.replace('@', '')
-
-        # cases of / between two entities
-        # if token.__contains__("/"):
-        #     for w in token.split("/"):
-        #         if w:
-        #             self.my_entities.append(w.upper())
-        #             self.current_entity = w
-        #             self.num_of_words = 0
-        #     return
-        #
-        # if token.__contains__('-'):
-        #     for w in token.split("-"):
-        #         if w:
-        #             self.my_entities.append(w.upper())
-        #             self.current_entity = w
-        #             self.num_of_words = 0
-        #     self.my_entities.append(token.replace('-', ' '))
-        #     return
         entities_to_return = []
         # case of entity compound of more then one word
         if self.last_token == index - 1:
             self.current_entity += ' ' + token.upper()
             self.last_token = index
             entities_to_return.append(self.current_entity)
-
         else:
             # create new entity
             self.current_entity = token
             self.last_token = index
+
+        if len(token) ==2:
+            if token.upper() in us_state_abbrev:
+                token = us_state_abbrev[token.upper()].upper().split()
+                entities_to_return += token
+                return entities_to_return
         entities_to_return.append(token.upper())
+
         return entities_to_return
         # if len(token) > 1: self.my_entities.append(token)
     def clear_entities(self):
         self.current_entity = ''
         self.last_token = -2
-
-
-    # def get_entities(self):
-    #     # return all document entities and change all fields
-    #     if self.current_entity and self.num_of_words > 1:
-    #         self.my_entities.append(self.current_entity)
-    #     self.current_entity = ''
-    #     self.num_of_words = 0
-    #     self.last_token = -2
-    #     temp_list = self.my_entities
-    #     self.my_entities = []
-    #     return temp_list
-    #
-    # def get_last_entity(self):
-    #     return self.current_entity
 
