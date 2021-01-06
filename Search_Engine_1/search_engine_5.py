@@ -121,8 +121,8 @@ class SearchEngine:
         else:
             extended_query = thesaurus(terms)
             searcher = Searcher(self._parser, self._indexer, model=self._model)
-            # return searcher.search(extended_query, k)
-            return extended_query
+            return searcher.search(extended_query, k)
+            # return extended_query
 
 
 def main():

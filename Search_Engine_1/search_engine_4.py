@@ -7,7 +7,7 @@ from parser_module import Parse
 from indexer import Indexer
 from searcher import Searcher
 import json
-import py_thesaurus
+
 
 # DO NOT CHANGE THE CLASS NAME
 class SearchEngine:

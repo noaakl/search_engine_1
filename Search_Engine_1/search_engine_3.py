@@ -6,7 +6,6 @@ from indexer import Indexer
 from searcher import Searcher
 import json
 from nltk.corpus import wordnet
-from search_engine_5 import SearchEngine as se5
 
 
 def word_net(terms):
@@ -124,8 +123,8 @@ class SearchEngine:
         else:
             extended_query = word_net(terms)
             searcher = Searcher(self._parser, self._indexer, model=self._model)
-            # return searcher.search(extended_query, k)
-            return extended_query
+            return searcher.search(extended_query, k)
+            # return extended_query
 
 
 def main():

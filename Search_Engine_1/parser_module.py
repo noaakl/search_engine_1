@@ -1,22 +1,35 @@
 import re
 import string
 from nltk.corpus import stopwords
-
 import configuration
 from document import Document
 import stemmer
 from text_processing import TextProcessing
-shortcuts = {"aint": 'is not', "arent": 'are not', "cant": 'cannot', "cantve": 'cannot have', 'cause': 'because', "couldve": 'could have', "couldnt": 'could not',
-"couldntve": 'could not have', "didnt": 'did not', "doesnt": 'does not', "dont": 'do not', "hadnt": 'had not', "hadntve": 'had not have', "hasnt": 'has not',
-"havent": 'have not', "hed": 'he had', "hes": 'he is', "howll": 'how will', "hows": 'how is', "Id": 'I would', "Ill": 'I will', "Im": 'I am', "Ive": 'I have', "isnt":'is not',
-"itd": 'it had', "itll": 'it will', "its": 'it is', "lets": 'let us', "maam": 'madam', "maynt": 'may not', "mightve": 'might have', "mightnt": 'might not', "mustve": 'must have',
-"mustnt": 'must not', "mustntve": 'must not have', "neednt": 'need not', "needntve": 'need not have', "oclock": 'of the clock', "shant": 'shall not', "shed": 'she had'
-, "shes": 'she is', "shouldve": 'should have', "shouldnt": 'should not', "sove": 'so have',  "thatd": 'that would',  "thats": 'that is', "thered": 'there would',
-"theres":'there is', "theyd": 'they would', "theyll": 'they will',"theyre": 'they are', "theyve": 'they have', "wasnt": 'was not', "well": 'we will',
- "we've": 'we have', "weren't": 'were not', "whatll": 'what will', "whatre": 'what are', "whats": 'what is', "whatve": 'what have'
-, "whens": 'when is', "wheres": 'where is', "who'll": 'who will',  "whos": 'who is', "willve": 'will have', "wont": 'will not',
- "wouldve": 'would have', "wouldnt": 'would not',"yall": 'you all',
- "youd": 'you would', "youll": 'you all',  "youre": 'you are', "youve": 'you have'}
+
+shortcuts = {"aint": 'is not', "arent": 'are not', "cant": 'cannot', "cantve": 'cannot have', 'cause': 'because',
+             "couldve": 'could have', "couldnt": 'could not',
+             "couldntve": 'could not have', "didnt": 'did not', "doesnt": 'does not', "dont": 'do not',
+             "hadnt": 'had not', "hadntve": 'had not have', "hasnt": 'has not',
+             "havent": 'have not', "hed": 'he had', "hes": 'he is', "howll": 'how will', "hows": 'how is',
+             "Id": 'I would', "Ill": 'I will', "Im": 'I am', "Ive": 'I have', "isnt": 'is not',
+             "itd": 'it had', "itll": 'it will', "its": 'it is', "lets": 'let us', "maam": 'madam', "maynt": 'may not',
+             "mightve": 'might have', "mightnt": 'might not', "mustve": 'must have',
+             "mustnt": 'must not', "mustntve": 'must not have', "neednt": 'need not', "needntve": 'need not have',
+             "oclock": 'of the clock', "shant": 'shall not', "shed": 'she had',
+             "shes": 'she is', "shouldve": 'should have', "shouldnt": 'should not', "sove": 'so have',
+             "thatd": 'that would', "thats": 'that is', "thered": 'there would',
+             "theres": 'there is', "theyd": 'they would', "theyll": 'they will', "theyre": 'they are',
+             "theyve": 'they have', "wasnt": 'was not', "well": 'we will',
+             "we've": 'we have', "weren't": 'were not', "whatll": 'what will', "whatre": 'what are', "whats": 'what is',
+             "whatve": 'what have',
+             "whens": 'when is', "wheres": 'where is', "who'll": 'who will', "whos": 'who is', "willve": 'will have',
+             "wont": 'will not',
+             "wouldve": 'would have', "wouldnt": 'would not', "yall": 'you all',
+             "youd": 'you would', "youll": 'you all', "youre": 'you are', "youve": 'you have'}
+
+corona = ["covid", "corona", "coronavirus", "sars", "covid-19", "covid 19"]
+
+trump = ["trump", "donald", "donald trump" "president"]
 
 class Parse:
 
@@ -33,7 +46,7 @@ class Parse:
         self.punctuation.pop('%')
         self.stop_words = stopwords.words('english')
         # self.stop_words.extend(
-            # ['_','``', "''", "'", " ", ":", "?", '.', 'https', '!', ',', '"', '^', '*', '&', ';', '~', 'etc', '-', '+', "=","/",")","("])
+        # ['_','``', "''", "'", " ", ":", "?", '.', 'https', '!', ',', '"', '^', '*', '&', ';', '~', 'etc', '-', '+', "=","/",")","("])
 
     def parse_sentence(self, text):
         """
@@ -57,7 +70,7 @@ class Parse:
         :return: Document object with corresponding fields.
         """
         needs_to_stem = False
-            #self.config.toStem
+        # self.config.toStem
 
         # create doc info
         tweet_id = doc_as_list[0]
@@ -130,9 +143,9 @@ class Parse:
         # first_tokens = []
         first_tokens = text.split()
         # print(first_tokens)
-        if first_tokens[0].lower() == 'rt' : first_tokens.pop(0)
+        if first_tokens[0].lower() == 'rt': first_tokens.pop(0)
         for token in first_tokens:
-            flag =0
+            flag = 0
             if 'http' in token:
                 continue
             token_checker = ''
@@ -146,26 +159,26 @@ class Parse:
 
 
                     elif len(token_checker) > 0:
-                        if char == ',' and token_checker[len(token_checker)-1].isdigit() :
+                        if char == ',' and token_checker[len(token_checker) - 1].isdigit():
                             continue
                         if char == '-':
                             if token_checker[len(token_checker) - 1] != '-':
                                 tokens.append(token_checker)
                                 token_checker = ''
                                 continue
-                        elif char =="." and token_checker[len(token_checker)-1].isdigit():
+                        elif char == "." and token_checker[len(token_checker) - 1].isdigit():
                             token_checker += char
                             continue
-                        elif char in "\/" :
+                        elif char in "\/":
                             if not token_checker.isdigit():
                                 token_checker += ' '
                                 continue
                         elif char == "'" or char == '’':
                             break
-                        elif char == '_' :
+                        elif char == '_':
                             if token.startswith('@') or token.startswith('#'):
-                               token_checker += char
-                               continue
+                                token_checker += char
+                                continue
                         # token_checker += char
                         tokens.append(token_checker)
                         token_checker = ''
@@ -177,6 +190,10 @@ class Parse:
             if len(token_checker) > 1:
                 if token_checker.lower() in shortcuts:
                     tokens += shortcuts[token_checker.lower()].split()
+                # elif token_checker.lower() in corona:
+                #     tokens += corona
+                # elif token_checker.lower() in trump:
+                #     tokens += trump
                 else:
                     tokens.append(token_checker)
 
