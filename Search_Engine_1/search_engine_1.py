@@ -93,9 +93,10 @@ class SearchEngine:
             a list of tweet_ids where the first element is the most relavant
             and the last is the least relevant result.
         """
-
+        query_as_tuple = self._parser.parse_sentence(query)
+        query_as_list = query_as_tuple[0] + query_as_tuple[1]
         searcher = Searcher(self._parser, self._indexer, model=self._model)
-        return searcher.search(query, k)
+        return searcher.search(query_as_list, k)
 
 
 def main():
