@@ -15,17 +15,17 @@ def word_net(terms):
     # TODO: לחשוב על דרך לתת למילים המוספות פחות משקל
     extended_terms = set(terms)
     for query_word in terms:
-        print("word: " + query_word)
+        # print("word: " + query_word)
         synset = wordnet.synsets(query_word)
         if len(synset) > 0:
             synset_lemmas = synset[0].lemmas()
             if len(synset_lemmas) > 3:synset_lemmas = synset_lemmas[:3]  # add not more than 3
-            print("sort list is: ")
+            # print("sort list is: ")
             for syn in synset_lemmas:
                 name = syn.name()
                 if name.islower() and not name.__contains__('_') and not name.__contains__('-'):
                     extended_terms.add(name)
-                    print(name)
+                    # print(name)
     return extended_terms
 
 

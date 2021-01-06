@@ -9,7 +9,6 @@ import json
 from spellchecker import SpellChecker
 
 
-
 # DO NOT CHANGE THE CLASS NAME
 class SearchEngine:
 
@@ -48,7 +47,6 @@ class SearchEngine:
             # index the document data
             self._indexer.add_new_doc(parsed_document)
 
-
         self._indexer.check_pending_list()
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
@@ -82,7 +80,7 @@ class SearchEngine:
         """
         pass
 
-    def search(self, query,k = None):
+    def search(self, query, k=None):
         """
         Executes a query over an existing index and returns the number of
         relevant docs and an ordered list of search results.
@@ -103,17 +101,17 @@ class SearchEngine:
         for word in query_as_list:
             correct_query.append(spell.correction(word))
 
-        return searcher.search(correct_query,k)
+        return searcher.search(correct_query, k)
 
 
 def main():
     config = ConfigClass()
     search_engine = SearchEngine(config)
     # r'C:\Users\noaa\pycharm projects\search_engine_partC\Search_Engine_1\data\benchmark_data_train.snappy.parquet'#
-    search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\benchmark_data_train.snappy.parquet')
+    search_engine.build_index_from_parquet(
+        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\benchmark_data_train.snappy.parquet')
     # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-16.snappy.parquet')
     # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-19.snappy.parquet')
     # results =search_engine.search("covid is fun 2020 US new  wear", 40)
     # for res in results[1]:
     #     print(res)
-

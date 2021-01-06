@@ -15,14 +15,14 @@ def thesaurus(terms):
     # TODO: לחשוב על דרך לתת למילים המוספות פחות משקל
     extended_terms = set(terms)
     for query_word in terms:
-        print("word: " + query_word)
+        # print("word: " + query_word)
         synonyms = linthesaurus.synonyms(query_word)
         for sim, keys in synonyms:
             if len(keys) > 1:
                 keys_list = list(keys)
-                print("full list is: " + str(keys_list))
+                # print("full list is: " + str(keys_list))
                 if len(keys_list) > 3: keys_list = keys_list[:3]
-                print("short list is: " + str(keys_list))
+                # print("short list is: " + str(keys_list))
                 extended_terms.update(keys_list)
     return extended_terms
 
@@ -153,8 +153,8 @@ def main():
 #     # print(synonyms)
 
 
-print("thes")
-se = SearchEngine()
-query = "Coronavirus is less dangerous than the flu	coronavirus less dangerous flu"
-res = se.search(query)
-print(res)
+# print("thes")
+# se = SearchEngine()
+# query = "Coronavirus is less dangerous than the flu	coronavirus less dangerous flu"
+# res = se.search(query)
+# print(res)
