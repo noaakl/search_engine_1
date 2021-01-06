@@ -1,6 +1,8 @@
 from numbers_processor import NumbersProcessor
 from entity import Entity
 from nltk.corpus import stopwords
+from spellchecker import SpellChecker
+
 
 
 class TextProcessing:
@@ -16,6 +18,8 @@ class TextProcessing:
             self.stop_words[w] = 0
         self.numbers = NumbersProcessor()
         self.entity = Entity()
+        self.spell_checker = SpellChecker()
+        self.spell_checker._distance = 1
 
     def process_text(self, text_tokens):
         """
@@ -29,7 +33,7 @@ class TextProcessing:
 
         for i in range(text_tokens_len):
             token = text_tokens[i]
-
+            token =self.spell_checker.correction(token)
             # check if needs to skip one token
             if skip_one:
                 skip_one = False

@@ -16,7 +16,7 @@ shortcuts = {"aint": 'is not', "arent": 'are not', "cant": 'cannot', "cantve": '
  "we've": 'we have', "weren't": 'were not', "whatll": 'what will', "whatre": 'what are', "whats": 'what is', "whatve": 'what have'
 , "whens": 'when is', "wheres": 'where is', "who'll": 'who will',  "whos": 'who is', "willve": 'will have', "wont": 'will not',
  "wouldve": 'would have', "wouldnt": 'would not',"yall": 'you all',
- "youd": 'you would', "youll": 'you will',  "youre": 'you are', "youve": 'you have'}
+ "youd": 'you would', "youll": 'you all',  "youre": 'you are', "youve": 'you have'}
 
 class Parse:
 
@@ -181,3 +181,6 @@ class Parse:
                     tokens.append(token_checker)
 
         return tokens
+
+# parser = Parse()
+# print(parser.parse_sentence("@docjgordo @YvieMarie88 @aubrey_huff There’s a lot more science showing the dangers and lack of efficacy of mask use in the general population than there is saying it’s safe or effective. Also consider the symptom similarity between hypoxia and prolonged high co2 with covid, add the contaminated masks..."))

@@ -177,6 +177,8 @@ class Indexer:
         Checks if a term exist in the dictionary.
         """
         return term in self.postingDict
+    def get_posting_dict(self):
+        return self.postingDict
 
     # feel free to change the signature and/or implmentation of this function 
     # or drop altogether.
@@ -190,7 +192,6 @@ class Indexer:
         except:
             return {}
 
-
     def get_doc_information(self, doc_id):
         try:
             result = self.doc_file[doc_id]
@@ -200,9 +201,13 @@ class Indexer:
 
     def get_index(self):
         return self.inverted_idx
+
     def calculate_sigma_Wij(self):
         for doc_id , term_dict  in self.doc_file.items():
-            num_of_uniqe_words = len(term_dict)
+            try:
+                num_of_uniqe_words = len(term_dict)
+            except:
+                continue
             sigma_Wij = 0
             for term in term_dict:
 
