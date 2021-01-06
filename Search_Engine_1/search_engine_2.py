@@ -4,7 +4,9 @@ from configuration import ConfigClass
 from parser_module import Parse
 from indexer import Indexer
 from searcher import Searcher
+import utils
 import json
+from spellchecker import SpellChecker
 
 
 
@@ -35,10 +37,8 @@ class SearchEngine:
         """
         df = pd.read_parquet(fn, engine="pyarrow")
         documents_list = df.values.tolist()
-        # documents_list = self._reader.get_next_file()  # TODO: from old maybe delete
         # Iterate over every document in the file
         number_of_documents = 0
-        # while (documents_list != None):  # TODO: from old maybe delete
         for idx, document in enumerate(documents_list):
             # parse the document
             parsed_document = self._parser.parse_doc(document)
@@ -47,7 +47,7 @@ class SearchEngine:
             number_of_documents += 1
             # index the document data
             self._indexer.add_new_doc(parsed_document)
-        # documents_list = self._reader.get_next_file()  # TODO: from old maybe delete
+
 
         self._indexer.check_pending_list()
         self._indexer.calculate_and_add_idf()
@@ -95,7 +95,12 @@ class SearchEngine:
         """
 
         searcher = Searcher(self._parser, self._indexer, model=self._model)
-        return searcher.search(query, k)
+        spell = SpellChecker()
+        spell._distance = 1
+        correct_query = ""
+        for word in query.split():
+            correct_query += spell.correction(word)
+        return searcher.search(query,k)
 
 
 def main():
