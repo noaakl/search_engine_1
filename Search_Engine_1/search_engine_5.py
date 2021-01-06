@@ -5,9 +5,28 @@ from parser_module import Parse
 from indexer import Indexer
 from searcher import Searcher
 import json
+from nltk.corpus import lin_thesaurus as linthesaurus
 
 
 # DO NOT CHANGE THE CLASS NAME
+def thesaurus(terms):
+    # TODO: without corona
+    # TODO: think if save num of words or set
+    # TODO: לחשוב על דרך לתת למילים המוספות פחות משקל
+    extended_terms = set(terms)
+    for query_word in terms:
+        # print("word: " + query_word)
+        synonyms = linthesaurus.synonyms(query_word)
+        for sim, keys in synonyms:
+            if len(keys) > 1:
+                keys_list = list(keys)
+                # print("full list is: " + str(keys_list))
+                if len(keys_list) > 3: keys_list = keys_list[:3]
+                # print("short list is: " + str(keys_list))
+                extended_terms.update(keys_list)
+    return extended_terms
+
+
 class SearchEngine:
 
     # DO NOT MODIFY THIS SIGNATURE
@@ -81,7 +100,7 @@ class SearchEngine:
         """
         pass
 
-    def search(self, query,k = None):
+    def search(self, query, k=None):
         """
         Executes a query over an existing index and returns the number of
         relevant docs and an ordered list of search results.
@@ -92,20 +111,50 @@ class SearchEngine:
             a list of tweet_ids where the first element is the most relavant
             and the last is the least relevant result.
         """
-        query_as_tuple = self._parser.parse_sentence(query)
-        query_as_list = query_as_tuple[0] + query_as_tuple[1]
-        searcher = Searcher(self._parser, self._indexer, model=self._model)
-        return searcher.search(query_as_list, k)
+        terms, entities = self._parser.parse_sentence(query)
+        query_as_list = terms + entities
+        # no need to extend large query TODO: decide hoe much
+        if len(terms) > 50:
+            searcher = Searcher(self._parser, self._indexer, model=self._model)
+            return searcher.search(query_as_list, k)
+        # thesaurus
+        else:
+            extended_query = thesaurus(terms)
+            searcher = Searcher(self._parser, self._indexer, model=self._model)
+            # return searcher.search(extended_query, k)
+            return extended_query
 
 
 def main():
     config = ConfigClass()
     search_engine = SearchEngine(config)
     # r'C:\Users\noaa\pycharm projects\search_engine_partC\Search_Engine_1\data\benchmark_data_train.snappy.parquet'#
-    search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\benchmark_data_train.snappy.parquet')
+    search_engine.build_index_from_parquet(
+        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\benchmark_data_train.snappy.parquet')
     # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-16.snappy.parquet')
     # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-19.snappy.parquet')
     # results =search_engine.search("covid is fun 2020 US new  wear", 40)
     # for res in results[1]:
     #     print(res)
 
+# terms = ["hey", "world", "program"]
+# extended_terms = set(terms)
+# for query_word in terms:
+#     synonyms = thesaurus.synonyms(query_word)
+#     for sim, keys in synonyms:
+#         if len(keys) > 1:
+#             keys_list = list(keys)
+#             if len(keys_list) > 3: keys_list = keys_list[:3]
+#             extended_terms.update(keys_list)
+#
+#                 print(keys)
+#
+#
+#     # print(synonyms)
+
+
+# print("thes")
+# se = SearchEngine()
+# query = "Coronavirus is less dangerous than the flu	coronavirus less dangerous flu"
+# res = se.search(query)
+# print(res)

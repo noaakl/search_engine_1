@@ -5,6 +5,28 @@ from parser_module import Parse
 from indexer import Indexer
 from searcher import Searcher
 import json
+from nltk.corpus import wordnet
+from search_engine_5 import SearchEngine as se5
+
+
+def word_net(terms):
+    # TODO: without corona
+    # TODO: think if save num of words or set
+    # TODO: לחשוב על דרך לתת למילים המוספות פחות משקל
+    extended_terms = set(terms)
+    for query_word in terms:
+        # print("word: " + query_word)
+        synset = wordnet.synsets(query_word)
+        if len(synset) > 0:
+            synset_lemmas = synset[0].lemmas()
+            if len(synset_lemmas) > 3:synset_lemmas = synset_lemmas[:3]  # add not more than 3
+            # print("sort list is: ")
+            for syn in synset_lemmas:
+                name = syn.name()
+                if name.islower() and not name.__contains__('_') and not name.__contains__('-'):
+                    extended_terms.add(name)
+                    # print(name)
+    return extended_terms
 
 
 # DO NOT CHANGE THE CLASS NAME
@@ -81,7 +103,7 @@ class SearchEngine:
         """
         pass
 
-    def search(self, query,k = None):
+    def search(self, query, k=None):
         """
         Executes a query over an existing index and returns the number of
         relevant docs and an ordered list of search results.
@@ -92,20 +114,68 @@ class SearchEngine:
             a list of tweet_ids where the first element is the most relavant
             and the last is the least relevant result.
         """
-        query_as_tuple = self._parser.parse_sentence(query)
-        query_as_list = query_as_tuple[0] + query_as_tuple[1]
-        searcher = Searcher(self._parser, self._indexer, model=self._model)
-        return searcher.search(query_as_list, k)
+        terms, entities = self._parser.parse_sentence(query)
+        query_as_list = terms + entities
+        # no need to extend large query TODO: decide hoe much
+        if len(terms) > 50:
+            searcher = Searcher(self._parser, self._indexer, model=self._model)
+            return searcher.search(query_as_list, k)
+        # word net
+        else:
+            extended_query = word_net(terms)
+            searcher = Searcher(self._parser, self._indexer, model=self._model)
+            # return searcher.search(extended_query, k)
+            return extended_query
 
 
 def main():
     config = ConfigClass()
     search_engine = SearchEngine(config)
     # r'C:\Users\noaa\pycharm projects\search_engine_partC\Search_Engine_1\data\benchmark_data_train.snappy.parquet'#
-    search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\benchmark_data_train.snappy.parquet')
+    search_engine.build_index_from_parquet(
+        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\benchmark_data_train.snappy.parquet')
     # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-16.snappy.parquet')
     # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-19.snappy.parquet')
     # results =search_engine.search("covid is fun 2020 US new  wear", 40)
     # for res in results[1]:
     #     print(res)
 
+
+
+
+
+# word = "program"
+# noaa = wordnet.synsets(word)[0].lemmas()
+# for i in noaa:
+#     print(i.name())
+
+# query_as_list = ["hello", "word", "program", "program", "computer"]
+# extended_query = set()
+# for query_word in query_as_list:
+#     print("word is: " + query_word)
+#     synset = wordnet.synsets(query_word)
+#     if len(synset) > 0:
+#         synset_lemmas = synset[0].lemmas()
+#         for syn in synset_lemmas[:2]:
+#             name = syn.name()
+#             if not name.__contains__('_') and not name.__contains__('-'):
+#                 extended_query.add(name)
+#                 print(name)
+# extended_query.update(query_as_list)
+# print(extended_query)
+#
+
+# print("wordnet")
+# se = SearchEngine()
+# query = "Coronavirus is less dangerous than the flu	coronavirus less dangerous flu"
+# res = se.search(query)
+# print(res)
+# print("\n")
+#
+#
+# print("thes")
+# se5 = se5()
+# query = "Coronavirus is less dangerous than the flu	coronavirus less dangerous flu"
+# res = se.search(query)
+# print(res)
+# print("\n")
