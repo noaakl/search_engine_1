@@ -1,19 +1,33 @@
+import json
+import os
 import pickle
 import requests
 import zipfile
 import re
 
 
+# def save_obj(obj, name):
+#     """
+#     This function save an object as a pickle.
+#     :param obj: object to save
+#     :param name: name of the pickle file.
+#     :return: -
+#     """
+#     with open(name + '.pkl', 'wb') as f:
+#         pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+
 def save_obj(obj, name):
     """
     This function save an object as a pickle.
+    :param config:
     :param obj: object to save
-    :param name: name of the pickle file.
+    :param name: name of the json file.
     :return: -
     """
-    with open(name + '.pkl', 'wb') as f:
-        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
+    json_element = json.dumps(obj)
+    with open(os.path.join(name + ".json"), "w") as f:
+        f.write(json_element)
 
 def load_obj(name):
     """
