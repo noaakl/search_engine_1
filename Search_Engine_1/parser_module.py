@@ -163,8 +163,8 @@ class Parse:
                             continue
                         if char == '-':
                             if token_checker[len(token_checker) - 1] != '-':
-                                tokens.append(token_checker)
-                                token_checker = ''
+                                # tokens.append(token_checker)
+                                token_checker += ' '
                                 continue
                         elif char == "." and token_checker[len(token_checker) - 1].isdigit():
                             token_checker += char
@@ -200,4 +200,4 @@ class Parse:
         return tokens
 
 # parser = Parse()
-# print(parser.parse_sentence("@docjgordo @YvieMarie88 @aubrey_huff There’s a lot more science showing the dangers and lack of efficacy of mask use in the general population than there is saying it’s safe or effective. Also consider the symptom similarity between hypoxia and prolonged high co2 with covid, add the contaminated masks..."))
+# print(parser.parse_sentence("Nearly 5,800 Floridians have now "))

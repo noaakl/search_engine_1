@@ -134,7 +134,7 @@ class NumbersProcessor:
 
     def is_number(self, num):
         boolean =  (self.is_float(num) or self.is_fraction(num) or self.is_int(num)) and self.is_num_without_letters(num)
-
+        return boolean
 
 # num_processor =NumbersProcessor()
 # print(num_processor.just_numbers("42300" , "hundred"))

@@ -12,8 +12,8 @@ class TextProcessing:
         self.stop_words ={}
         my_stopwords = stopwords.words('english')
         my_stopwords.extend(
-            [ '^', '*', '&', ';', '~', 'etc',  "=","/",")","("])
-        #more stop word - probably not nesecery '_','``', "''", "'", " ", ":", "?", '.', 'https', '!', ',', '"','-', '+',
+            [ '^', '*', '&', ';', '~', 'etc',  "=","/",")","(",'_','``', "''", "'", " ", ":", "?", '.', 'https', '!', ',', '"','-', '+'])
+        #more stop word - probably not nesecery
         for w in my_stopwords:
             self.stop_words[w] = 0
         self.numbers = NumbersProcessor()
