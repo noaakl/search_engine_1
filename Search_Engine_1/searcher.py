@@ -35,9 +35,9 @@ class Searcher:
         n_relevant = len(ranked_doc_ids)
         return n_relevant, ranked_doc_ids
 
-    def search_with_extention(self, query, extetion, k=None):
+    def search_with_extention(self, query, extension, k=None):
         query_as_dict = self.get_query_by_inverted_index(query)
-        query_as_dict = self.get_extended_and_query_by_inverted_index(query, query_as_dict)
+        query_as_dict = self.get_extended_and_query_by_inverted_index(extension, query_as_dict)
         relevant_docs = self._relevant_docs_from_posting(query_as_dict.keys())
         n_relevant = len(relevant_docs)
         ranked_doc_ids = Ranker.rank_relevant_docs(relevant_docs, query_as_dict, k)
@@ -57,10 +57,12 @@ class Searcher:
             posting_list = self._indexer.get_term_posting_list(term)
 
             for doc_id, information in posting_list.items():  # information :[tf, df, is_upper]
-                sigma_Wij_for_doc = self._indexer.get_doc_information(doc_id)
+                doc_info = self._indexer.get_doc_information(doc_id)
+                sigma_Wij_for_doc = doc_info[0]
+                doc_date = doc_info[1]
                 if doc_id not in relevant_docs.keys():
                     # [ Wiq of document[0],term:tf,idf]
-                    relevant_docs[doc_id] = [sigma_Wij_for_doc, {term.lower(): (information[0], index[term][2])}]
+                    relevant_docs[doc_id] = [sigma_Wij_for_doc, {term.lower(): (information[0], index[term][2])}, doc_date]
                 else:
                     relevant_docs[doc_id][1][term.lower()] = (information[0], index[term][2])
                 # df = relevant_docs.get(doc_id, 0)

@@ -31,7 +31,7 @@ class Document:
 
     # the info needed for every doc in doc file
     def get_doc_info(self):
-        return [self.max_f, self.get_num_of_uniq_words(), 0]
+        return [0, self.tweet_date]
 
     # all the words in the doc
     def get_num_of_uniq_words(self):

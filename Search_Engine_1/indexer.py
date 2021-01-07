@@ -24,7 +24,7 @@ class Indexer:
         self.inverted_idx = {}  # term: [df, f ,idf]
         self.postingDict = {}  # term: {doc: [tf, df, is_upper]}
         self.config = config
-        self.doc_file = {}  # id: {word: doc_term_dict}
+        self.doc_file = {}  # doc_id : [term_dict, date] later term_dict become sigmaWij fo save space
         self.entities = {}  # dictionary for pending entities (only one time so far in corpus)
 
     # DO NOT MODIFY THIS SIGNATURE
@@ -55,7 +55,8 @@ class Indexer:
 
         # self.postingDict[term].append((document.tweet_id, doc_term_dict[term])) TODO: check if ok or change to this format
         doc_term_dict.update(doc_entity_dict)
-        self.doc_file[document.tweet_id] = doc_term_dict
+        self.doc_file[document.tweet_id] = document.get_doc_info()
+        self.doc_file[document.tweet_id][0]= doc_term_dict#doc_id : [ term_dict, date]
         Indexer.num_of_docs += 1
 
     def add_term(self, document, term):
@@ -205,25 +206,24 @@ class Indexer:
         return self.inverted_idx
 
     def calculate_sigma_Wij(self):
-        for doc_id, term_dict in self.doc_file.items():
+        for doc_id, doc_info in self.doc_file.items():
             try:
-                num_of_uniqe_words = len(term_dict)
+                num_of_uniqe_words = len(doc_info[0])
             except:
                 continue
             sigma_Wij = 0
-            for term in term_dict:
-
+            for term in doc_info[0]:
                 try:
                     # compute sigma Wij
                     sigma_Wij += math.pow(
-                        self.inverted_idx[term.lower()][2] * term_dict[term] / num_of_uniqe_words, 2)
+                        self.inverted_idx[term.lower()][2] * doc_info[0][term] / num_of_uniqe_words, 2)
                 except:
                     try:
                         sigma_Wij += math.pow(
-                            self.inverted_idx[term.upper()][2] * term_dict[term] / num_of_uniqe_words, 2)
+                            self.inverted_idx[term.upper()][2] * doc_info[0][term] / num_of_uniqe_words, 2)
                     except:
                         pass
-            self.doc_file[doc_id] = sigma_Wij
+            self.doc_file[doc_id][0] = sigma_Wij
 
     def check_pending_list(self):
         for entity in self.entities.keys():

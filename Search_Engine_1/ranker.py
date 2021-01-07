@@ -33,7 +33,7 @@ class Ranker:
                 tf_idf = relevant_docs[doc_id][1][term][0] * relevant_docs[doc_id][1][term][1]
                 upper_part += tf_idf * query_dict[term]
 
-            score = Ranker.cos_similarity(upper_part, query_wiq, document_wij)
+            score = 0.95 *Ranker.cos_similarity(upper_part, query_wiq, document_wij) + 0.05 * relevant_docs[doc_id][2]
             heapq.heappush(ranked_docs, [-1 * score, doc_id])
 
         return Ranker.retrieve_top_k(ranked_docs,k)

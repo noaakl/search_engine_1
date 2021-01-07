@@ -5,6 +5,7 @@ import configuration
 from document import Document
 import stemmer
 from text_processing import TextProcessing
+from _datetime import datetime
 
 shortcuts = {"aint": 'is not', "arent": 'are not', "cant": 'cannot', "cantve": 'cannot have', 'cause': 'because',
              "couldve": 'could have', "couldnt": 'could not',
@@ -84,7 +85,10 @@ class Parse:
 
         # create doc info
         tweet_id = doc_as_list[0]
-        tweet_date = doc_as_list[1]
+        date_distance = datetime.strptime("Sun Jan 10 05:03:50 +0000 2021", "%a %b %d %H:%M:%S %z %Y") - datetime.strptime(doc_as_list[1], "%a %b %d %H:%M:%S %z %Y")
+        formatted_date_distance = str(date_distance).split(',')[1].replace(':', '')
+        tweet_date = -int(formatted_date_distance)/999999
+        # print(tweet_date)
         full_text = doc_as_list[2]
         url = doc_as_list[3]
         retweet_text = doc_as_list[4]
@@ -94,6 +98,7 @@ class Parse:
         term_dict = {}
         entity_dict = {}
         max_f = 0
+
         # parse
         tokenized_text, entities = self.parse_sentence(full_text)
         if tokenized_text == [] and entities == []: return
