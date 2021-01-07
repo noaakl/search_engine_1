@@ -29,7 +29,7 @@ shortcuts = {"aint": 'is not', "arent": 'are not', "cant": 'cannot', "cantve": '
 
 corona = {"covid" : "covid","virus":"corona", "corona" : "covid", "coronavirus" :  "covid", "covid19": "covid", "covid 19" : "covid", "cov":"covid"}
 
-# trump = ["trump", "donald", "donald trump" "president"]
+trump = {"trump": "donald trump", "donald trump": "donald trump", "president": "donald trump"}
 
 class Parse:
 
@@ -164,8 +164,8 @@ class Parse:
                         if char == '-':
                             if token_checker[len(token_checker) - 1] != '-' :
                                 # if  token_checker[0].isupper() or token[len(token_checker) - 1].isdigit():
-                                    token_checker += ' '
-                                    continue
+                                token_checker += ' '
+                                continue
                                 # else:
                                 #     tokens.append(token_checker)
                                 #     token_checker = ''
@@ -195,12 +195,12 @@ class Parse:
             if len(token_checker) > 1:
                 if token_checker.lower() in shortcuts:
                     tokens += shortcuts[token_checker.lower()].split()
-                elif token_checker.lower() in corona:
-                    tokens.append(corona[token_checker.lower()])
+                # elif token_checker.lower() in corona:
+                #     tokens.append(corona[token_checker.lower()])
                 # elif token_checker.lower() in corona:
                 #     tokens += corona
-                # elif token_checker.lower() in trump:
-                #     tokens += trump
+                elif token_checker.lower() in trump:
+                    tokens += trump[token_checker.lower()]
                 else:
                     tokens.append(token_checker)
 

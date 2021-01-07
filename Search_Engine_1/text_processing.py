@@ -38,6 +38,7 @@ class TextProcessing:
 
         for i in range(text_tokens_len):
             token = text_tokens[i]
+
             # token =self.spell_checker.correction(token)
             # check if needs to skip one token
             if skip_one:
