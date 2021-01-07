@@ -27,13 +27,23 @@ shortcuts = {"aint": 'is not', "arent": 'are not', "cant": 'cannot', "cantve": '
              "wouldve": 'would have', "wouldnt": 'would not', "yall": 'you all',
              "youd": 'you would', "youll": 'you all', "youre": 'you are', "youve": 'you have'}
 
-corona = {"covid" : "covid","virus":"corona", "corona" : "covid", "coronavirus" :  "covid", "covid19": "covid", "covid 19" : "covid", "cov":"covid"}
+corona = {"covid": "covid", "virus": "corona", "corona": "covid", "coronavirus": "covid", "covid19": "covid",
+          "covid 19": "covid", "cov": "covid"}
 
 trump = {"trump": "donald trump", "donald trump": "donald trump", "president": "donald trump"}
 
+
+def parse_url(url):
+    delimiters = '[/=+:?><.-}{]'
+    url = url.replace('[', '')
+    url = url.replace(']', '')
+    url_tokens = [w.lower() for w in re.split(delimiters, url) if w and w != '{}' and len(w) > 1]
+    return url_tokens
+
+
 class Parse:
 
-    def __init__(self,spell_check = False):
+    def __init__(self, spell_check=False):
         self.stemmer = stemmer.Stemmer()
         self.text_processing = TextProcessing(spell_check)
         # self.config = config
@@ -45,8 +55,8 @@ class Parse:
         self.punctuation.pop('@')
         self.punctuation.pop('%')
         self.stop_words = stopwords.words('english')
-        # self.stop_words.extend(
-        # ['_','``', "''", "'", " ", ":", "?", '.', 'https', '!', ',', '"', '^', '*', '&', ';', '~', 'etc', '-', '+', "=","/",")","("])
+        # self.stop_words.extend( ['_','``', "''", "'", " ", ":", "?", '.', 'https', '!', ',', '"', '^', '*', '&',
+        # ';', '~', 'etc', '-', '+', "=","/",")","("])
 
     def parse_sentence(self, text):
         """
@@ -54,9 +64,9 @@ class Parse:
         :param text: string of the full text of a document
         :return: processed_text: list of terms, entities: list of entities
         """
-        print(text)
+        # print(text)
         text_tokens = self.tokenize_text(text)
-        print("after tokenize: " ,text_tokens)
+        # print("after tokenize: ", text_tokens)
         if not text_tokens: return [], []
         processed_text, entities = self.text_processing.process_text(text_tokens)
         return processed_text, entities
@@ -90,7 +100,7 @@ class Parse:
         doc_length = len(tokenized_text) + len(entities)  # after text operations, with stopwords.
 
         # create term dict for the doc
-        for term in tokenized_text + self.parse_url(url):
+        for term in tokenized_text + parse_url(url):
             if needs_to_stem: term = self.stemmer.stem_term(term)
             if term.lower() not in term_dict:
                 term_dict[term.lower()] = 1
@@ -124,19 +134,12 @@ class Parse:
         # create doc
         document = Document(tweet_id, tweet_date, full_text, url, retweet_text, retweet_url, quote_text,
                             quote_url, term_dict, doc_length, entity_dict, max_f)
-        print("document Id : " +tweet_id)
-        print("entities : " + str(entity_dict))
-        print("terms : " + str(term_dict))
-        print("*********************************************************")
+        # print("document Id : " + tweet_id)
+        # print("entities : " + str(entity_dict))
+        # print("terms : " + str(term_dict))
+        # print("*********************************************************")
 
         return document
-
-    def parse_url(self, url):
-        delimiters = '[/=+:?><.-}{]'
-        url = url.replace('[', '')
-        url = url.replace(']', '')
-        url_tokens = [w.lower() for w in re.split(delimiters, url) if w and w != '{}' and len(w) > 1]
-        return url_tokens
 
     def tokenize_text(self, text):
         tokens = []
@@ -157,12 +160,11 @@ class Parse:
                         # tokens.append(token_checker)
                         continue
 
-
                     elif len(token_checker) > 0:
                         if char == ',' and token_checker[len(token_checker) - 1].isdigit():
                             continue
                         if char == '-':
-                            if token_checker[len(token_checker) - 1] != '-' :
+                            if token_checker[len(token_checker) - 1] != '-':
                                 # if  token_checker[0].isupper() or token[len(token_checker) - 1].isdigit():
                                 token_checker += ' '
                                 continue
@@ -206,5 +208,5 @@ class Parse:
 
         return tokens
 
-parser = Parse()
-print(parser.parse_sentence("Nearly 5,800 Floridians have now "))
+# parser = Parse()
+# print(parser.parse_sentence("Nearly 5,800 Floridians have now "))

@@ -13,21 +13,21 @@ def thesaurus(terms):
     # TODO: without corona
     # TODO: think if save num of words or set
     # TODO: לחשוב על דרך לתת למילים המוספות פחות משקל
-    extended_terms = set(terms)
+    extended_terms = set()
     for query_word in terms:
+        if query_word == "trump":
+            continue
         # print("word: " + query_word)
         synonyms = linthesaurus.synonyms(query_word)
         for sim, keys in synonyms:
             if len(keys) > 1:
                 keys_list = list(keys)
-                # print("full list is: " + str(keys_list))
-                if len(keys_list) > 3: keys_list = keys_list[:3]
-                # print("short list is: " + str(keys_list))
+                if len(keys_list) > 2: keys_list = keys_list[:2]  # add only 2
                 extended_terms.update(keys_list)
-    return extended_terms
+    return list(extended_terms)
 
 
-class SearchEngine:
+class SearchEngine:   # TODO: change
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implementation, but you must have a parser and an indexer.
@@ -113,16 +113,11 @@ class SearchEngine:
         """
         terms, entities = self._parser.parse_sentence(query)
         query_as_list = terms + entities
-        # no need to extend large query TODO: decide hoe much
-        if len(terms) > 50:
-            searcher = Searcher(self._parser, self._indexer, model=self._model)
-            return searcher.search(query_as_list, k)
         # thesaurus
-        else:
-            extended_query = thesaurus(terms)
-            searcher = Searcher(self._parser, self._indexer, model=self._model)
-            return searcher.search(extended_query, k)
-            # return extended_query
+        extended_query = thesaurus(terms)
+        searcher = Searcher(self._parser, self._indexer, model=self._model)
+        return searcher.search_with_extention(query_as_list, extended_query, k)
+        # return extended_query
 
 
 def main():
@@ -137,24 +132,20 @@ def main():
     # for res in results[1]:
     #     print(res)
 
-# terms = ["hey", "world", "program"]
+
+# terms = ["donald", "trump", "covid", "corona", "donald trump", "covid 19", "sars"]
 # extended_terms = set(terms)
 # for query_word in terms:
-#     synonyms = thesaurus.synonyms(query_word)
+#     # print("word: " + query_word)
+#     synonyms = linthesaurus.synonyms(query_word)
 #     for sim, keys in synonyms:
 #         if len(keys) > 1:
 #             keys_list = list(keys)
-#             if len(keys_list) > 3: keys_list = keys_list[:3]
+#             # print("full list is: " + str(keys_list))
+#             if len(keys_list) > 2: keys_list = keys_list[:2]  # add only 2
+#             # print("short list is: " + str(keys_list))
+#             print(query_word + ": ")
+#             for key in keys_list:
+#                 print(key)
 #             extended_terms.update(keys_list)
-#
-#                 print(keys)
-#
-#
-#     # print(synonyms)
-
-
-# print("thes")
-# se = SearchEngine()
-# query = "Coronavirus is less dangerous than the flu	coronavirus less dangerous flu"
-# res = se.search(query)
-# print(res)
+# print(list(extended_terms))

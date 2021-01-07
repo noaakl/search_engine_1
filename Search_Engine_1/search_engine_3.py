@@ -12,20 +12,20 @@ def word_net(terms):
     # TODO: without corona
     # TODO: think if save num of words or set
     # TODO: לחשוב על דרך לתת למילים המוספות פחות משקל
-    extended_terms = set(terms)
+    extended_terms = set()
     for query_word in terms:
         # print("word: " + query_word)
         synset = wordnet.synsets(query_word)
         if len(synset) > 0:
             synset_lemmas = synset[0].lemmas()
-            if len(synset_lemmas) > 3:synset_lemmas = synset_lemmas[:3]  # add not more than 3
+            # if len(synset_lemmas) > 2:synset_lemmas = synset_lemmas[:2]  # add not more than 3
             # print("sort list is: ")
-            for syn in synset_lemmas:
-                name = syn.name()
-                if name.islower() and not name.__contains__('_') and not name.__contains__('-'):
-                    extended_terms.add(name)
-                    # print(name)
-    return extended_terms
+            syn = synset_lemmas[0]  # add only one
+            name = syn.name()
+            if name.islower() and not name.__contains__('_') and not name.__contains__('-') and name != "corona":
+                extended_terms.add(name)
+                # print(name)
+    return list(extended_terms)
 
 
 # DO NOT CHANGE THE CLASS NAME
@@ -102,7 +102,7 @@ class SearchEngine:
         """
         pass
 
-    def search(self, query, k=None):
+    def search(self, query, k=None):  # TODO: change
         """
         Executes a query over an existing index and returns the number of
         relevant docs and an ordered list of search results.
@@ -115,16 +115,11 @@ class SearchEngine:
         """
         terms, entities = self._parser.parse_sentence(query)
         query_as_list = terms + entities
-        # no need to extend large query TODO: decide hoe much
-        if len(terms) > 50:
-            searcher = Searcher(self._parser, self._indexer, model=self._model)
-            return searcher.search(query_as_list, k)
         # word net
-        else:
-            extended_query = word_net(terms)
-            searcher = Searcher(self._parser, self._indexer, model=self._model)
-            return searcher.search(extended_query, k)
-            # return extended_query
+        extended_query = word_net(terms)
+        searcher = Searcher(self._parser, self._indexer, model=self._model)
+        return searcher.search_with_extention(query_as_list, extended_query, k)
+        # return extended_query
 
 
 def main():
@@ -140,41 +135,21 @@ def main():
     #     print(res)
 
 
-
-
-
-# word = "program"
-# noaa = wordnet.synsets(word)[0].lemmas()
-# for i in noaa:
-#     print(i.name())
-
-# query_as_list = ["hello", "word", "program", "program", "computer"]
-# extended_query = set()
-# for query_word in query_as_list:
-#     print("word is: " + query_word)
+# terms = ["donald", "trump", "covid", "corona", "donald trump", "covid 19"]
+# extended_terms = set(terms)
+# for query_word in terms:
+#     # print("word: " + query_word)
 #     synset = wordnet.synsets(query_word)
 #     if len(synset) > 0:
 #         synset_lemmas = synset[0].lemmas()
-#         for syn in synset_lemmas[:2]:
+#         if len(synset_lemmas) > 3:synset_lemmas = synset_lemmas[:3]  # add not more than 3
+#         # print("sort list is: ")
+#         for syn in synset_lemmas:
+#         # syn = synset_lemmas[0]  # add only one
 #             name = syn.name()
-#             if not name.__contains__('_') and not name.__contains__('-'):
-#                 extended_query.add(name)
-#                 print(name)
-# extended_query.update(query_as_list)
-# print(extended_query)
-#
+#             if name.islower() and not name.__contains__('_') and not name.__contains__('-'):
+#                 print(query_word + ": " + name)
+#                 extended_terms.add(name)
+#                 # print(name)
+# print(list(extended_terms))
 
-# print("wordnet")
-# se = SearchEngine()
-# query = "Coronavirus is less dangerous than the flu	coronavirus less dangerous flu"
-# res = se.search(query)
-# print(res)
-# print("\n")
-#
-#
-# print("thes")
-# se5 = se5()
-# query = "Coronavirus is less dangerous than the flu	coronavirus less dangerous flu"
-# res = se.search(query)
-# print(res)
-# print("\n")

@@ -12,6 +12,7 @@ def get_info_for_posting(word, document, is_term):
     is_upper = word.isupper()  # TODO: check
     return [tf, df, is_upper]
 
+
 # DO NOT MODIFY CLASS NAME
 class Indexer:
     num_of_docs = 0
@@ -23,7 +24,7 @@ class Indexer:
         self.inverted_idx = {}  # term: [df, f ,idf]
         self.postingDict = {}  # term: {doc: [tf, df, is_upper]}
         self.config = config
-        self.doc_file = {}
+        self.doc_file = {}  # id: {word: doc_term_dict}
         self.entities = {}  # dictionary for pending entities (only one time so far in corpus)
 
     # DO NOT MODIFY THIS SIGNATURE
@@ -142,7 +143,7 @@ class Indexer:
         if entity.lower() in self.postingDict:
             if prev_entity:
                 self.postingDict[entity.lower()].update(prev_entity[0])
-            self.postingDict[entity.lower()][document.tweet_id] =\
+            self.postingDict[entity.lower()][document.tweet_id] = \
                 get_info_for_posting(entity, document, False)
         else:
             if prev_entity:
@@ -177,6 +178,7 @@ class Indexer:
         Checks if a term exist in the dictionary.
         """
         return term in self.postingDict
+
     def get_posting_dict(self):
         return self.postingDict
 
@@ -187,7 +189,7 @@ class Indexer:
         Return the posting list from the index for a term.
         """
         try:
-            result =  self.postingDict[term]
+            result = self.postingDict[term]
             return result
         except:
             return {}
@@ -203,7 +205,7 @@ class Indexer:
         return self.inverted_idx
 
     def calculate_sigma_Wij(self):
-        for doc_id , term_dict  in self.doc_file.items():
+        for doc_id, term_dict in self.doc_file.items():
             try:
                 num_of_uniqe_words = len(term_dict)
             except:
@@ -214,11 +216,11 @@ class Indexer:
                 try:
                     # compute sigma Wij
                     sigma_Wij += math.pow(
-                        self.inverted_idx[term.lower()][2] * term_dict[term]/num_of_uniqe_words, 2)
+                        self.inverted_idx[term.lower()][2] * term_dict[term] / num_of_uniqe_words, 2)
                 except:
                     try:
                         sigma_Wij += math.pow(
-                            self.inverted_idx[term.upper()][2] * term_dict[term]/num_of_uniqe_words, 2)
+                            self.inverted_idx[term.upper()][2] * term_dict[term] / num_of_uniqe_words, 2)
                     except:
                         pass
             self.doc_file[doc_id] = sigma_Wij
@@ -242,4 +244,3 @@ class Indexer:
         """
         for word in self.inverted_idx.items():
             word[1].append(math.log(Indexer.num_of_docs / word[1][0], 10))
-

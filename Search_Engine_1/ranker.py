@@ -13,7 +13,9 @@ class Ranker:
         """
         This function provides rank for each relevant document and sorts them by their scores.
         The current score considers solely the number of terms shared by the tweet (full_text) and query.
-        :param relevant_doc: dictionary of documents that contains at least one term from the query.
+        :param k:
+        :param query_dict:
+        :param relevant_docs: dictionary of documents that contains at least one term from the query.
         :return: sorted list of documents by score
         """
         ranked_docs = []
@@ -23,6 +25,8 @@ class Ranker:
         for doc_id in relevant_docs.keys():
             # if doc_id =='1280935601450213377':
             #     print("")
+            if len(query_dict) > 3 and len(relevant_docs[doc_id][1]) < 2:
+                continue
             upper_part = 0
             document_wij = relevant_docs[doc_id][0]
             for term in relevant_docs[doc_id][1]:
