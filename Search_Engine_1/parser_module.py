@@ -33,9 +33,9 @@ trump = ["trump", "donald", "donald trump" "president"]
 
 class Parse:
 
-    def __init__(self):
+    def __init__(self,spell_check = False):
         self.stemmer = stemmer.Stemmer()
-        self.text_processing = TextProcessing()
+        self.text_processing = TextProcessing(spell_check)
         # self.config = config
         # ************************
         self.punctuation = {}

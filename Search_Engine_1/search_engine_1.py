@@ -1,4 +1,6 @@
 import pandas as pd
+
+import global_method
 from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
@@ -102,9 +104,10 @@ def main():
     config = ConfigClass()
     search_engine = SearchEngine(config)
     # r'C:\Users\noaa\pycharm projects\search_engine_partC\Search_Engine_1\data\benchmark_data_train.snappy.parquet'#
-    search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\benchmark_data_train.snappy.parquet')
-    # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-16.snappy.parquet')
-    # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-19.snappy.parquet')
+    search_engine.build_index_from_parquet(r'C:\Users\Ophir Porat\PycharmProjects\search_engine_1\Search_Engine_1\data\benchmark_data_train.snappy.parquet')
+    # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\Search_Engine_1\\data\covid19_08-04.snappy.parquet')
+    # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\Search_Engine_1\\data\covid19_07-19.snappy.parquet')
+
     # results =search_engine.search("covid is fun 2020 US new  wear", 40)
     # for res in results[1]:
     #     print(res)
