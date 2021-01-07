@@ -76,6 +76,7 @@ class TextProcessing:
                 skip_one = False
 
         self.entity.clear_entities()
+        final_entities = [entity for entity in final_entities if len(entity.split())<4]
         return final_tokens, final_entities
 
     def split_hashtag(self, hashtag):
