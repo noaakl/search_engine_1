@@ -27,9 +27,9 @@ shortcuts = {"aint": 'is not', "arent": 'are not', "cant": 'cannot', "cantve": '
              "wouldve": 'would have', "wouldnt": 'would not', "yall": 'you all',
              "youd": 'you would', "youll": 'you all', "youre": 'you are', "youve": 'you have'}
 
-corona = ["covid", "corona", "coronavirus", "sars", "covid-19", "covid 19"]
+corona = {"covid" : "covid","virus":"corona", "corona" : "covid", "coronavirus" :  "covid", "covid19": "covid", "covid 19" : "covid", "cov":"covid"}
 
-trump = ["trump", "donald", "donald trump" "president"]
+# trump = ["trump", "donald", "donald trump" "president"]
 
 class Parse:
 
@@ -54,9 +54,9 @@ class Parse:
         :param text: string of the full text of a document
         :return: processed_text: list of terms, entities: list of entities
         """
-        # print(text)
+        print(text)
         text_tokens = self.tokenize_text(text)
-        # print("after tokenize: " ,text_tokens)
+        print("after tokenize: " ,text_tokens)
         if not text_tokens: return [], []
         processed_text, entities = self.text_processing.process_text(text_tokens)
         return processed_text, entities
@@ -124,10 +124,10 @@ class Parse:
         # create doc
         document = Document(tweet_id, tweet_date, full_text, url, retweet_text, retweet_url, quote_text,
                             quote_url, term_dict, doc_length, entity_dict, max_f)
-        # print("document Id : " +tweet_id)
-        # print("entities : " + str(entity_dict))
-        # print("terms : " + str(term_dict))
-        # print("*********************************************************")
+        print("document Id : " +tweet_id)
+        print("entities : " + str(entity_dict))
+        print("terms : " + str(term_dict))
+        print("*********************************************************")
 
         return document
 
@@ -162,10 +162,15 @@ class Parse:
                         if char == ',' and token_checker[len(token_checker) - 1].isdigit():
                             continue
                         if char == '-':
-                            if token_checker[len(token_checker) - 1] != '-':
-                                # tokens.append(token_checker)
-                                token_checker += ' '
-                                continue
+                            if token_checker[len(token_checker) - 1] != '-' :
+                                # if  token_checker[0].isupper() or token[len(token_checker) - 1].isdigit():
+                                    token_checker += ' '
+                                    continue
+                                # else:
+                                #     tokens.append(token_checker)
+                                #     token_checker = ''
+                                #     continue
+
                         elif char == "." and token_checker[len(token_checker) - 1].isdigit():
                             token_checker += char
                             continue
@@ -190,6 +195,8 @@ class Parse:
             if len(token_checker) > 1:
                 if token_checker.lower() in shortcuts:
                     tokens += shortcuts[token_checker.lower()].split()
+                elif token_checker.lower() in corona:
+                    tokens.append(corona[token_checker.lower()])
                 # elif token_checker.lower() in corona:
                 #     tokens += corona
                 # elif token_checker.lower() in trump:
@@ -199,5 +206,5 @@ class Parse:
 
         return tokens
 
-# parser = Parse()
-# print(parser.parse_sentence("Nearly 5,800 Floridians have now "))
+parser = Parse()
+print(parser.parse_sentence("Nearly 5,800 Floridians have now "))

@@ -3,7 +3,7 @@ us_state_abbrev = {
     'IA': 'Iowa','KS': 'Kansas','KY': 'Kentucky','LA': 'Louisiana','ME': 'Maine','MD': 'Maryland','MA': 'Massachusetts','MI': 'Michigan','MN': 'Minnesota','MS': 'Mississippi','MO': 'Missouri',
     'MT': 'Montana','NE': 'Nebraska','NV': 'Nevada','NH': 'New Hampshire','NJ': 'New Jersey','NM': 'New Mexico','NY': 'New York','NC': 'North Carolina','ND': 'North Dakota',
     'OH': 'Ohio','OK': 'Oklahoma','OR': 'Oregon','PA': 'Pennsylvania','RI': 'Rhode Island','SC': 'South Carolina','SD': 'South Dakota','TN': 'Tennessee','TX': 'Texas','UT': 'Utah',
-    'VT': 'Vermont','VA': 'Virginia','WA': 'Washington','WV': 'West Virginia','WI': 'Wisconsin','WY': 'Wyoming','US': 'United States', 'America': 'United States'
+    'VT': 'Vermont','VA': 'Virginia','WA': 'Washington','WV': 'West Virginia','WI': 'Wisconsin','WY': 'Wyoming','US': 'United States', 'America': 'United States', 'USA': "United States"
 }
 
 class Entity:
@@ -11,6 +11,7 @@ class Entity:
     def __init__(self):
         self.last_token = -2
         self.current_entity = ''
+        self.num_of_words = 0
 
     # adds a new entity to the my_entities list
     def add_to_my_entities(self, token, index):
@@ -19,13 +20,17 @@ class Entity:
         :param index: the index which token in full text document
         """
         entities_to_return = []
+
         # case of entity compound of more then one word
         if self.last_token == index - 1:
+            # and self.num_of_words < 3
             self.current_entity += ' ' + token.upper()
             self.last_token = index
+            self.num_of_words += 1
             entities_to_return.append(self.current_entity)
         else:
             # create new entity
+            self.num_of_words = 1
             self.current_entity = token
             self.last_token = index
 

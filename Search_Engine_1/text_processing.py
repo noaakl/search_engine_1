@@ -48,10 +48,6 @@ class TextProcessing:
             if token[0].isupper():
                 final_entities += self.entity.add_to_my_entities(token, i)
 
-            # stopWord
-            elif token in self.stop_words:
-                continue
-
             # hashtag
             elif token.startswith("#") :
                 tokens, entities = self.split_hashtag(text_tokens[i])
@@ -66,6 +62,10 @@ class TextProcessing:
                 else:
                     processed_token, skip_one = self.numbers.process_numbers(token)
                 final_tokens += processed_token
+
+            # stopWord
+            elif token.lower() in self.stop_words:
+                continue
 
             # word
             else:
