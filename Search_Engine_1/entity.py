@@ -31,9 +31,8 @@ class Entity:
 
         if len(token) ==2:
             if token.upper() in us_state_abbrev:
-                token = us_state_abbrev[token.upper()].upper().split()
-                entities_to_return += token
-                return entities_to_return
+                token = us_state_abbrev[token.upper()].upper()
+                # entities_to_return += token
         entities_to_return.append(token.upper())
 
         return entities_to_return
