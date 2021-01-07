@@ -1,5 +1,5 @@
 class ConfigClass:
-    def __init__(self):
+    def __init__(self, parse_function =None, expand_function =None):
         # link to a zip file in google drive with your pretrained model
         self._model_url = None
         # False/True flag indicating whether the testing system will download
@@ -9,6 +9,8 @@ class ConfigClass:
         # in subsequent submissions to avoid the slow downloading of the large
         # model file with every submission.
         self._download_model = False
+        self._model_parse_function = parse_function
+        self._model_expand_function = expand_function
         # self.corpusPath = 'C:\\Users\\noaa\\pycharm projects\\search_engine_partC\\Search_Engine_1\\data'
         self.corpusPath = 'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data'
         # self.corpusPath = ' '
