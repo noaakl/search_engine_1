@@ -65,9 +65,9 @@ class Parse:
         :param text: string of the full text of a document
         :return: processed_text: list of terms, entities: list of entities
         """
-        # print(text)
+        print(text)
         text_tokens = self.tokenize_text(text)
-        # print("after tokenize: ", text_tokens)
+        print("after tokenize: ", text_tokens)
         if not text_tokens: return [], []
         processed_text, entities = self.text_processing.process_text(text_tokens)
         return processed_text, entities
@@ -139,10 +139,10 @@ class Parse:
         # create doc
         document = Document(tweet_id, tweet_date, full_text, url, retweet_text, retweet_url, quote_text,
                             quote_url, term_dict, doc_length, entity_dict, max_f)
-        # print("document Id : " + tweet_id)
-        # print("entities : " + str(entity_dict))
-        # print("terms : " + str(term_dict))
-        # print("*********************************************************")
+        print("document Id : " + tweet_id)
+        print("entities : " + str(entity_dict))
+        print("terms : " + str(term_dict))
+        print("*********************************************************")
 
         return document
 
@@ -202,8 +202,8 @@ class Parse:
             if len(token_checker) > 1:
                 if token_checker.lower() in shortcuts:
                     tokens += shortcuts[token_checker.lower()].split()
-                # elif token_checker.lower() in corona:
-                #     tokens.append(corona[token_checker.lower()])
+                elif token_checker.lower() in corona:
+                    tokens.append(corona[token_checker.lower()])
                 # elif token_checker.lower() in corona:
                 #     tokens += corona
                 elif token_checker.lower() in trump:
@@ -213,5 +213,5 @@ class Parse:
 
         return tokens
 
-# parser = Parse()
-# print(parser.parse_sentence("Nearly 5,800 Floridians have now "))
+parser = Parse()
+print(parser.parse_sentence("hey Covid covid19 covid-19 coronavirus Coronavirus US Us "))

@@ -85,18 +85,23 @@ class NumbersProcessor:
                 return num, False
 
             divide = 1000000000.0
-            while new_number < divide:
+            while new_number < divide and divide >1:
                 # print(num,new_number,token2 , divide)
                 divide = divide / 1000.0
             formed_number = num
             if divide != 1:
                 formed_number= float(float(new_number) / divide)
                 list_to_format = str(formed_number).split('.')
-                if int(list_to_format[1]) >0 :
+                try:
+                    if int(list_to_format[1]) >0 :
+                        list_to_format[1] = list_to_format[1][0:3]
+                        formed_number =list_to_format[0] + '.' +list_to_format[1]
+                    else:
+                        formed_number  =list_to_format[0]
+                except:
                     list_to_format[1] = list_to_format[1][0:3]
-                    formed_number =list_to_format[0] + '.' +list_to_format[1]
-                else:
-                    formed_number  =list_to_format[0]
+                    formed_number = list_to_format[0] + '.' + list_to_format[1]
+
                 formed_number = str(formed_number) + self.number_form_dict[divide]
             return formed_number, multiply != 1
 
