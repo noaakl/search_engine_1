@@ -33,7 +33,7 @@ class Document:
 
     # the info needed for every doc in doc file
     def get_doc_info(self):
-        return [0, self.tweet_date, self.doc_length]  # TODO: why 0? + noaa added doc_len
+        return [0, self.tweet_date, self.doc_length]  # TODO: why 0? + noaa added doc_len -answer - later it will be sigmaWij
 
     # all the words in the doc
     def get_num_of_uniq_words(self):

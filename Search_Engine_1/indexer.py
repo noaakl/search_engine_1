@@ -10,8 +10,8 @@ class Indexer:
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
     def __init__(self, config):
-        self.inverted_idx = {}  # term: [df, f ,idf]
-        self.postingDict = {}  # term: {doc: [tf, df, is_upper]}
+        self.inverted_idx = {}  # term: [df ,idf]
+        self.postingDict = {}  # term: {doc: [tf, df]}
         self.config = config
         self.doc_file = {}  # doc_id : [term_dict, date] later term_dict become sigmaWij fo save space
         self.entities = {}  # dictionary for pending entities (only one time so far in corpus)
@@ -45,7 +45,7 @@ class Indexer:
         # self.postingDict[term].append((document.tweet_id, doc_term_dict[term])) TODO: check if ok or change to this format
         doc_term_dict.update(doc_entity_dict)
         self.doc_file[document.tweet_id] = document.get_doc_info()
-        self.doc_file[document.tweet_id][0]= doc_term_dict#doc_id : [ term_dict, date]
+        self.doc_file[document.tweet_id][0]= doc_term_dict #doc_id : [ term_dict, date]
         Indexer.num_of_docs += 1
 
     def add_term(self, document, term):
@@ -64,17 +64,17 @@ class Indexer:
         # term is already in inverted_idx
         if term.lower() in self.inverted_idx:
             self.inverted_idx[term.lower()][0] += 1
-            self.inverted_idx[term.lower()][1] += doc_term_dict[term]
+            # self.inverted_idx[term.lower()][1] += doc_term_dict[term]
 
         # term is already in inverted_idx as an entity
         elif term.upper() in self.inverted_idx:
             change_upper_to_lower = True  # TODO: add if term.islower() ?
             self.inverted_idx[term.upper()][0] += 1
-            self.inverted_idx[term.upper()][1] += doc_term_dict[term]
+            # self.inverted_idx[term.upper()][1] += doc_term_dict[term]
 
         # add a new term to inverted_idx
         else:
-            self.inverted_idx[term.lower()] = [1, doc_term_dict[term]]
+            self.inverted_idx[term.lower()] = [1]
 
         # Update posting dict
         info = self.get_info_for_posting(term, document, True)
@@ -90,7 +90,7 @@ class Indexer:
             to_lower_idx = self.inverted_idx.pop(term.upper())
             self.inverted_idx[term.lower()] = to_lower_idx
 
-        Indexer.sum_of_appearances += 1
+        # Indexer.sum_of_appearances += 1
 
     def add_entity(self, document, entity):
         """
@@ -100,28 +100,28 @@ class Indexer:
         :param document: curr document.
         :return: -
         """
-        doc_entity_dict = document.entity_dict
+        # doc_entity_dict = document.entity_dict
         prev_entity = None
         # Update inverted index
         # entity already appear twice in corpus in lowerCase
         if entity.lower() in self.inverted_idx:
             self.inverted_idx[entity.lower()][0] += 1
-            self.inverted_idx[entity.lower()][1] += doc_entity_dict[entity]
+            # self.inverted_idx[entity.lower()][1] += doc_entity_dict[entity]
 
         # entity already appear twice in corpus in upperCase
         elif entity.upper() in self.inverted_idx:
             self.inverted_idx[entity.upper()][0] += 1
-            self.inverted_idx[entity.upper()][1] += doc_entity_dict[entity]
+            # self.inverted_idx[entity.upper()][1] += doc_entity_dict[entity]
 
         # second time in corpus - append both tweets to invert_idx and posting
         elif entity.upper() in self.entities:
             prev_entity = self.entities.pop(entity.upper())
             if entity.lower() in self.inverted_idx:
                 self.inverted_idx[entity.lower()][0] += 2
-                self.inverted_idx[entity.lower()][1] += doc_entity_dict[entity] + prev_entity[1]
+                # self.inverted_idx[entity.lower()][1] += doc_entity_dict[entity] + prev_entity[1]
             else:
-                self.inverted_idx[entity.upper()] = [2, doc_entity_dict[entity] + prev_entity[1]]
-            Indexer.sum_of_appearances += 1
+                self.inverted_idx[entity.upper()] = [2]
+            # Indexer.sum_of_appearances += 1
 
         # first time entity in corpus
         else:
@@ -141,7 +141,7 @@ class Indexer:
             self.postingDict[entity.lower()] = {
                 document.tweet_id: self.get_info_for_posting(entity, document, False)}
 
-        Indexer.sum_of_appearances += 1
+        # Indexer.sum_of_appearances += 1
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -205,11 +205,11 @@ class Indexer:
                 try:
                     # compute sigma Wij
                     sigma_Wij_squere += math.pow(
-                        self.inverted_idx[term.lower()][2] * doc_info[0][term] / num_of_uniqe_words, 2)
+                        self.inverted_idx[term.lower()][1] * doc_info[0][term] / num_of_uniqe_words, 2)
                 except:
                     try:
                         sigma_Wij_squere += math.pow(
-                            self.inverted_idx[term.upper()][2] * doc_info[0][term] / num_of_uniqe_words, 2)
+                            self.inverted_idx[term.upper()][1] * doc_info[0][term] / num_of_uniqe_words, 2)
                     except:
                         pass
             self.doc_file[doc_id][0] = sigma_Wij_squere
@@ -219,7 +219,7 @@ class Indexer:
             if entity.lower() in self.inverted_idx:
                 # Update inverted index
                 self.inverted_idx[entity.lower()][0] += 1
-                self.inverted_idx[entity.lower()][1] += self.entities[entity][1]
+                # self.inverted_idx[entity.lower()][1] += self.entities[entity][1]
 
                 # Update posting dict
                 if entity.lower() in self.postingDict:
@@ -241,5 +241,5 @@ class Indexer:
             df = document.entity_dict[word.upper()]
         tf = int(df) / document.get_num_of_uniq_words()
         # tf = int(df) / document.doc_length
-        is_upper = word.isupper()  # TODO: check
-        return [tf, df, is_upper]
+        # is_upper = word.isupper()  # TODO: check
+        return [tf, df]
