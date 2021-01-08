@@ -239,7 +239,7 @@ class Indexer:
             df = document.term_doc_dictionary[word.lower()]
         else:
             df = document.entity_dict[word.upper()]
-        tf = int(df) / document.get_num_of_uniq_words()
-        # tf = int(df) / document.doc_length
+        # tf = int(df) / document.get_num_of_uniq_words()
+        tf = int(df) / document.doc_length
         # is_upper = word.isupper()  # TODO: check
         return [tf, df]

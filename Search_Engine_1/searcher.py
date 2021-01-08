@@ -60,11 +60,14 @@ class Searcher:
                 doc_info = self._indexer.get_doc_information(doc_id)
                 sigma_Wij_for_doc = doc_info[0]
                 doc_date = doc_info[1]
+                doc_len = doc_info[2]
                 if doc_id not in relevant_docs.keys():
+                    tf = information[0]
+                    idf = index[term][1]
                     # id: [Wiq of document[0], {term: tf, idf}, date, doc_len]
-                    relevant_docs[doc_id] = [sigma_Wij_for_doc, {term.lower(): (information[0], index[term][1])}, doc_date, doc_info[2]]
+                    relevant_docs[doc_id] = [sigma_Wij_for_doc, {term.lower(): (tf, idf)}, doc_date, doc_len]
                 else:
-                    relevant_docs[doc_id][1][term.lower()] = (information[0], index[term][1])
+                    relevant_docs[doc_id][1][term.lower()] = (tf, idf)
                 # df = relevant_docs.get(doc_id, 0)
                 # relevant_docs[doc_id] = df + 1
         return relevant_docs

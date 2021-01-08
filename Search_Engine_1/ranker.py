@@ -45,7 +45,7 @@ class Ranker:
 
             date = relevant_docs[doc_id][2]
             cos_sim = Ranker.cos_similarity(upper_part, query_wiq, document_wij)
-            score = 0.5 * sigma_bm25 + 0.45 * cos_sim + 0.05 * date
+            score = 0.7 * sigma_bm25 + 0.25 * cos_sim + 0.05 * date
 
             heapq.heappush(ranked_docs, [-1 * score, doc_id])
 
@@ -80,7 +80,7 @@ class Ranker:
 
     @staticmethod
     def calculate_bm25(wiq, tf, idf, doc_len):
-        k = 0.3
-        b = 0.9
+        k = 0.1
+        b = 0.7
         avg_doc_len = Document.get_avg_doc_len()
         return (wiq * (k + 1) * tf * idf) / (tf + k * (1 - b + (b * doc_len / avg_doc_len)))
