@@ -34,9 +34,10 @@ class Entity:
             self.current_entity = token
             self.last_token = index
 
-        if len(token) ==2:
-            if token.upper() in us_state_abbrev:
-                token = us_state_abbrev[token.upper()].upper()
+        if token.upper() in us_state_abbrev:
+            token = us_state_abbrev[token.upper()].upper()
+            self.current_entity = token
+            self.last_token = -2
                 # entities_to_return += token
         entities_to_return.append(token.upper())
 
