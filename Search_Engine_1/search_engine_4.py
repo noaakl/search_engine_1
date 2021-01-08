@@ -61,6 +61,9 @@ class SearchEngine:
         with open("posting_file.json", 'w') as json_file:
             json.dump(self._indexer.postingDict, json_file)
 
+        global_method.create_association_matrix(self._indexer.inverted_idx,
+                                                self._indexer.get_posting_dict())
+
         print('Finished parsing and indexing.')
 
     # DO NOT MODIFY THIS SIGNATURE
@@ -83,7 +86,7 @@ class SearchEngine:
         """
         pass
 
-    def search(self, query,k = None):
+    def search(self, query, k=None):
         """
         Executes a query over an existing index and returns the number of
         relevant docs and an ordered list of search results.
@@ -101,29 +104,36 @@ class SearchEngine:
         query_as_list = self.expand_query(query_as_list)
         return searcher.search(query_as_list, k)
 
-    def expand_query(self,query):
+    def expand_query(self, query):
         query_expanded = []
-        with open("correlated_words.json","r") as f:
+        with open("correlated_words.json", "r") as f:
             correlated_words = json.load(f)
         for word in query:
             if word in correlated_words:
                 query_expanded.append(correlated_words[word][1])
-                print(word , correlated_words[word][1])
+                # print(word, correlated_words[word][1])
             query_expanded.append(word)
+        return query_expanded
+
 
 def main():
     config = ConfigClass()
     search_engine = SearchEngine(config)
     # r'C:\Users\noaa\pycharm projects\search_engine_partC\Search_Engine_1\data\benchmark_data_train.snappy.parquet'#
-    search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\Search_Engine_1\data\benchmark_data_train.snappy.parquet')
-    search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\Search_Engine_1\\data\covid19_08-04.snappy.parquet')
-    search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\Search_Engine_1\\data\covid19_07-08.snappy.parquet')
-    search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\Search_Engine_1\data\covid19_07-25.snappy.parquet')
-    search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\Search_Engine_1\data\covid19_07-24.snappy.parquet')
-    global_method.create_association_matrix(search_engine._indexer.inverted_idx,search_engine._indexer.get_posting_dict())
+    search_engine.build_index_from_parquet(
+        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\Search_Engine_1\data\benchmark_data_train.snappy.parquet')
+    search_engine.build_index_from_parquet(
+        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\Search_Engine_1\\data\covid19_08-04.snappy.parquet')
+    search_engine.build_index_from_parquet(
+        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\Search_Engine_1\\data\covid19_07-08.snappy.parquet')
+    search_engine.build_index_from_parquet(
+        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\Search_Engine_1\data\covid19_07-25.snappy.parquet')
+    search_engine.build_index_from_parquet(
+        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\Search_Engine_1\data\covid19_07-24.snappy.parquet')
+    global_method.create_association_matrix(search_engine._indexer.inverted_idx,
+                                            search_engine._indexer.get_posting_dict())
     #
     # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-19.snappy.parquet')
     # results =search_engine.search("covid is fun 2020 US new  wear", 40)
     # for res in results[1]:
     #     print(res)
-
