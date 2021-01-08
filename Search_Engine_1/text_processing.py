@@ -4,16 +4,16 @@ from nltk.corpus import stopwords
 from spellchecker import SpellChecker
 
 
-
 class TextProcessing:
     names_and_entities_dict = {}  # name : (how many docs, how many times in corpus, )
 
-    def __init__(self, spell_check = False):
-        self.stop_words ={}
+    def __init__(self, spell_check=False):
+        self.stop_words = {}
         my_stopwords = stopwords.words('english')
         my_stopwords.extend(
-            [ '^', '*', '&', ';', '~', 'etc',  "=","/",")","(",'_','``', "''", "'", " ", ":", "?", '.', 'https', '!', ',', '"','-', '+'])
-        #more stop word - probably not nesecery
+            ['^', '*', '&', ';', '~', 'etc', "=", "/", ")", "(", '_', '``', "''", "'", " ", ":", "?", '.', 'https', '!',
+             ',', '"', '-', '+', 'web', 'status'])
+        # more stop word - probably not nesecery
         for w in my_stopwords:
             self.stop_words[w] = 0
         self.numbers = NumbersProcessor()
@@ -23,8 +23,6 @@ class TextProcessing:
             self.spell._distance = 0.7
         else:
             self.spell = None
-
-
 
     def process_text(self, text_tokens):
         """
@@ -50,7 +48,7 @@ class TextProcessing:
                 final_entities += self.entity.add_to_my_entities(token, i)
 
             # hashtag
-            elif token.startswith("#") :
+            elif token.startswith("#"):
                 tokens, entities = self.split_hashtag(text_tokens[i])
                 final_tokens += tokens
                 final_entities += entities
@@ -70,13 +68,14 @@ class TextProcessing:
 
             # word
             else:
-                if self.spell: final_tokens.append(self.spell.correction(token))
+                if self.spell:
+                    final_tokens.append(self.spell.correction(token))
                 else:
                     final_tokens.append(token)
                 skip_one = False
 
         self.entity.clear_entities()
-        final_entities = [entity for entity in final_entities if len(entity.split())<4]
+        final_entities = [entity for entity in final_entities if len(entity.split()) < 4]
         return final_tokens, final_entities
 
     def split_hashtag(self, hashtag):
@@ -118,7 +117,7 @@ class TextProcessing:
                     curr_word = curr_letter
                 elif curr_word and curr_word.isupper():
                     curr_word += curr_letter
-                else: # curr word not upper - add curr word and stard new one
+                else:  # curr word not upper - add curr word and stard new one
                     splited_terms.append(curr_word.lower())
                     curr_word = ""
                     curr_word += curr_letter

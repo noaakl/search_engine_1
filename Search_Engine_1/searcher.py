@@ -56,13 +56,13 @@ class Searcher:
         for term in query_as_list:
             posting_list = self._indexer.get_term_posting_list(term)
 
-            for doc_id, information in posting_list.items():  # information :[tf, df, is_upper]
+            for doc_id, information in posting_list.items():  # information :[tf, df, is_upper] TODO: changed to [?, date, doc_len] ?
                 doc_info = self._indexer.get_doc_information(doc_id)
                 sigma_Wij_for_doc = doc_info[0]
                 doc_date = doc_info[1]
                 if doc_id not in relevant_docs.keys():
-                    # [ Wiq of document[0],term:tf,idf]
-                    relevant_docs[doc_id] = [sigma_Wij_for_doc, {term.lower(): (information[0], index[term][2])}, doc_date]
+                    # id: [Wiq of document[0], {term: tf, idf}, date, doc_len]
+                    relevant_docs[doc_id] = [sigma_Wij_for_doc, {term.lower(): (information[0], index[term][2])}, doc_date, information[2]]
                 else:
                     relevant_docs[doc_id][1][term.lower()] = (information[0], index[term][2])
                 # df = relevant_docs.get(doc_id, 0)

@@ -47,6 +47,7 @@ class Parse:
     def __init__(self, spell_check=False):
         self.stemmer = stemmer.Stemmer()
         self.text_processing = TextProcessing(spell_check)
+        self.num_of_docs = 0
         # self.config = config
         # ************************
         self.punctuation = {}
@@ -144,6 +145,8 @@ class Parse:
         # print("terms : " + str(term_dict))
         # print("*********************************************************")
 
+        Document.avg_doc_len[0] += doc_length
+        Document.avg_doc_len[1] += 1
         return document
 
     def tokenize_text(self, text):

@@ -1,16 +1,5 @@
 import math
-
 import utils
-
-
-def get_info_for_posting(word, document, is_term):
-    if is_term:
-        df = document.term_doc_dictionary[word.lower()]
-    else:
-        df = document.entity_dict[word.upper()]
-    tf = int(df) / document.get_num_of_uniq_words()
-    is_upper = word.isupper()  # TODO: check
-    return [tf, df, is_upper]
 
 
 # DO NOT MODIFY CLASS NAME
@@ -88,7 +77,7 @@ class Indexer:
             self.inverted_idx[term.lower()] = [1, doc_term_dict[term]]
 
         # Update posting dict
-        info = get_info_for_posting(term, document, True)
+        info = self.get_info_for_posting(term, document, True)
 
         if term.lower() in self.postingDict:  # term is already in postingDict
             self.postingDict[term.lower()][document.tweet_id] = info
@@ -136,7 +125,7 @@ class Indexer:
 
         # first time entity in corpus
         else:
-            entity_info = get_info_for_posting(entity, document, False)
+            entity_info = self.get_info_for_posting(entity, document, False)
             self.entities[entity.upper()] = [{document.tweet_id: entity_info}, entity_info[1]]
             return
 
@@ -145,12 +134,12 @@ class Indexer:
             if prev_entity:
                 self.postingDict[entity.lower()].update(prev_entity[0])
             self.postingDict[entity.lower()][document.tweet_id] = \
-                get_info_for_posting(entity, document, False)
+                self.get_info_for_posting(entity, document, False)
         else:
             if prev_entity:
                 self.postingDict[entity.lower()] = prev_entity[0]
             self.postingDict[entity.lower()] = {
-                document.tweet_id: get_info_for_posting(entity, document, False)}
+                document.tweet_id: self.get_info_for_posting(entity, document, False)}
 
         Indexer.sum_of_appearances += 1
 
@@ -244,3 +233,12 @@ class Indexer:
         """
         for word in self.inverted_idx.items():
             word[1].append(math.log(Indexer.num_of_docs / word[1][0], 10))
+
+    def get_info_for_posting(self, word, document, is_term):
+        if is_term:
+            df = document.term_doc_dictionary[word.lower()]
+        else:
+            df = document.entity_dict[word.upper()]
+        tf = int(df) / document.get_num_of_uniq_words()
+        is_upper = word.isupper()  # TODO: check
+        return [tf, df, is_upper]
