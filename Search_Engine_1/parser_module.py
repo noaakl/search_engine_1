@@ -66,9 +66,9 @@ class Parse:
         :param text: string of the full text of a document
         :return: processed_text: list of terms, entities: list of entities
         """
-        # print(text)
+        print(text)
         text_tokens = self.tokenize_text(text)
-        # print("after tokenize: ", text_tokens)
+        print("after tokenize: ", text_tokens)
         if not text_tokens: return [], []
         processed_text, entities = self.text_processing.process_text(text_tokens)
         return processed_text, entities
@@ -140,10 +140,10 @@ class Parse:
         # create doc
         document = Document(tweet_id, tweet_date, full_text, url, retweet_text, retweet_url, quote_text,
                             quote_url, term_dict, doc_length, entity_dict, max_f)
-        # print("document Id : " + tweet_id)
-        # print("entities : " + str(entity_dict))
-        # print("terms : " + str(term_dict))
-        # print("*********************************************************")
+        print("document Id : " + tweet_id)
+        print("entities : " + str(entity_dict))
+        print("terms : " + str(term_dict))
+        print("*********************************************************")
 
         Document.avg_doc_len[0] += document.get_num_of_uniq_words()
         # Document.avg_doc_len[0] += doc_length
@@ -174,9 +174,13 @@ class Parse:
                             continue
                         if char == '-':
                             if token_checker[len(token_checker) - 1] != '-':
+                                if not token[len(token) -1].isdigit() and not token[len(token) -1] in self.punctuation:
                                 # if  token_checker[0].isupper() or token[len(token_checker) - 1].isdigit():
-                                token_checker += ' '
-                                continue
+                                    token_checker += ' '
+                                    continue
+                                else:
+                                    break
+
                                 # else:
                                 #     tokens.append(token_checker)
                                 #     token_checker = ''
@@ -186,9 +190,11 @@ class Parse:
                             token_checker += char
                             continue
                         elif char in "\/":
-                            if not token_checker.isdigit():
-                                token_checker += ' '
-                                continue
+                            if not token_checker.isdigit() and not token_checker[0].isupper():
+                                token_splited = re.split(token , "\/")
+                                tokens += [word for word in token_splited if word]
+                                token_checker = ''
+                                break
                         elif char == "'" or char == '’':
                             break
                         elif char == '_':
@@ -206,16 +212,16 @@ class Parse:
             if len(token_checker) > 1:
                 if token_checker.lower() in shortcuts:
                     tokens += shortcuts[token_checker.lower()].split()
-                elif token_checker.lower() in corona:
-                    tokens.append(corona[token_checker.lower()])
+                # elif token_checker.lower() in corona:
+                #     tokens.append(corona[token_checker.lower()])
                 # elif token_checker.lower() in corona:
                 #     tokens += corona
-                elif token_checker.lower() in trump:
-                    tokens += trump[token_checker.lower()]
+                # elif token_checker.lower() in trump:
+                #     tokens += trump[token_checker.lower()]
                 else:
                     tokens.append(token_checker)
 
         return tokens
 
-# parser = Parse()
-# print(parser.parse_sentence("hey Covid covid19 covid-19 coronavirus Coronavirus US Us "))
+parser = Parse()
+print(parser.parse_sentence("@Lost_Toddler My only point was that Covid-19 is not a virus. It is the disease or set of symptoms CAUSED by the virus named either Coronavirus-2 or SARS-Cov-2"))
