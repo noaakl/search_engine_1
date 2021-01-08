@@ -66,9 +66,9 @@ class Parse:
         :param text: string of the full text of a document
         :return: processed_text: list of terms, entities: list of entities
         """
-        print(text)
+        # print(text)
         text_tokens = self.tokenize_text(text)
-        print("after tokenize: ", text_tokens)
+        # print("after tokenize: ", text_tokens)
         if not text_tokens: return [], []
         processed_text, entities = self.text_processing.process_text(text_tokens)
         return processed_text, entities
@@ -140,12 +140,13 @@ class Parse:
         # create doc
         document = Document(tweet_id, tweet_date, full_text, url, retweet_text, retweet_url, quote_text,
                             quote_url, term_dict, doc_length, entity_dict, max_f)
-        print("document Id : " + tweet_id)
-        print("entities : " + str(entity_dict))
-        print("terms : " + str(term_dict))
-        print("*********************************************************")
+        # print("document Id : " + tweet_id)
+        # print("entities : " + str(entity_dict))
+        # print("terms : " + str(term_dict))
+        # print("*********************************************************")
 
-        Document.avg_doc_len[0] += doc_length
+        Document.avg_doc_len[0] += document.get_num_of_uniq_words()
+        # Document.avg_doc_len[0] += doc_length
         Document.avg_doc_len[1] += 1
         return document
 
@@ -216,5 +217,5 @@ class Parse:
 
         return tokens
 
-parser = Parse()
-print(parser.parse_sentence("hey Covid covid19 covid-19 coronavirus Coronavirus US Us "))
+# parser = Parse()
+# print(parser.parse_sentence("hey Covid covid19 covid-19 coronavirus Coronavirus US Us "))

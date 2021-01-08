@@ -200,19 +200,19 @@ class Indexer:
                 num_of_uniqe_words = len(doc_info[0])
             except:
                 continue
-            sigma_Wij = 0
+            sigma_Wij_squere = 0
             for term in doc_info[0]:
                 try:
                     # compute sigma Wij
-                    sigma_Wij += math.pow(
+                    sigma_Wij_squere += math.pow(
                         self.inverted_idx[term.lower()][2] * doc_info[0][term] / num_of_uniqe_words, 2)
                 except:
                     try:
-                        sigma_Wij += math.pow(
+                        sigma_Wij_squere += math.pow(
                             self.inverted_idx[term.upper()][2] * doc_info[0][term] / num_of_uniqe_words, 2)
                     except:
                         pass
-            self.doc_file[doc_id][0] = sigma_Wij
+            self.doc_file[doc_id][0] = sigma_Wij_squere
 
     def check_pending_list(self):
         for entity in self.entities.keys():
@@ -240,5 +240,6 @@ class Indexer:
         else:
             df = document.entity_dict[word.upper()]
         tf = int(df) / document.get_num_of_uniq_words()
+        # tf = int(df) / document.doc_length
         is_upper = word.isupper()  # TODO: check
         return [tf, df, is_upper]
