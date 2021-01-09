@@ -7,7 +7,7 @@ from spellchecker import SpellChecker
 class TextProcessing:
     names_and_entities_dict = {}  # name : (how many docs, how many times in corpus, )
 
-    def __init__(self, spell_check=False):
+    def __init__(self):
         self.stop_words = {}
         my_stopwords = stopwords.words('english')
         my_stopwords.extend(
@@ -18,11 +18,7 @@ class TextProcessing:
             self.stop_words[w] = 0
         self.numbers = NumbersProcessor()
         self.entity = Entity()
-        if spell_check:
-            self.spell = SpellChecker()
-            self.spell._distance = 2
-        else:
-            self.spell = None
+
 
     def process_text(self, text_tokens):
         """
@@ -68,10 +64,7 @@ class TextProcessing:
 
             # word
             else:
-                if self.spell:
-                    final_tokens.append(self.spell.correction(token))
-                else:
-                    final_tokens.append(token)
+                final_tokens.append(token)
                 skip_one = False
 
         self.entity.clear_entities()

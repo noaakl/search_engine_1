@@ -20,7 +20,7 @@ class SearchEngine:
             self._config = ConfigClass()
         else:
             self._config = config
-        self._parser = Parse(True)
+        self._parser = Parse()
         self._indexer = Indexer(config)
         self._model = None
         self._reader = ReadFile(self._config.get__corpusPath())
@@ -97,6 +97,9 @@ class SearchEngine:
         """
         query_as_tuple = self._parser.parse_sentence(query)
         query_as_list = query_as_tuple[0] + query_as_tuple[1]
+        self.spell = SpellChecker()
+        self.spell._distance = 2
+        query_as_list = [self.spell.correction(word) for word in query_as_list]
         searcher = Searcher(self._parser, self._indexer, model=self._model)
         return searcher.search(query_as_list, k)
 

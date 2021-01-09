@@ -46,7 +46,7 @@ class Parse:
 
     def __init__(self, spell_check=False):
         self.stemmer = stemmer.Stemmer()
-        self.text_processing = TextProcessing(spell_check)
+        self.text_processing = TextProcessing()
         self.num_of_docs = 0
         # self.config = config
         # ************************
