@@ -28,10 +28,9 @@ shortcuts = {"aint": 'is not', "arent": 'are not', "cant": 'cannot', "cantve": '
              "wouldve": 'would have', "wouldnt": 'would not', "yall": 'you all',
              "youd": 'you would', "youll": 'you all', "youre": 'you are', "youve": 'you have'}
 
-corona = {"covid": "covid", "virus": "covid", "corona": "covid", "coronavirus": "covid", "covid19": "covid",
-          "covid 19": "covid", "cov": "covid"}
+corona = {"corona": "covid", "coronavirus": "covid", "covid19": "covid", "covid 19": "covid"}
 
-trump = {"trump": "donald trump", "donald trump": "donald trump", "president": "donald trump"}
+trump = {"donald": "trump", "president": "trump"}
 
 
 def parse_url(url):
@@ -214,11 +213,9 @@ class Parse:
                     tokens += shortcuts[token_checker.lower()].split()
                 elif token_checker.lower() in corona:
                     tokens.append(corona[token_checker.lower()])
+
                 elif token_checker.lower() in trump:
                     tokens.append(trump[token_checker.lower()])
-
-                # elif token_checker.lower() in trump:
-                #     tokens += trump[token_checker.lower()]
                 else:
                     tokens.append(token_checker)
 
