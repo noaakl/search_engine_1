@@ -45,7 +45,7 @@ class Ranker:
 
             date = relevant_docs[doc_id][2]
             cos_sim = Ranker.cos_similarity(inner_product, query_wiq, document_wij)
-            score = 0.45 * sigma_bm25 + 0.50 * cos_sim + 0.05 * date  # + 0.05 * inner_product
+            score = 0.7 * sigma_bm25 + 0.25 * cos_sim + 0.05 * date  # + 0.05 * inner_product
 
             heapq.heappush(ranked_docs, [-1 * score, doc_id])
 
