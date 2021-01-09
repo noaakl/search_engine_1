@@ -1,4 +1,5 @@
 import pickle
+import time
 
 import pandas as pd
 
@@ -111,11 +112,14 @@ class SearchEngine:   # TODO: change
             a list of tweet_ids where the first element is the most relavant
             and the last is the least relevant result.
         """
+        # start = time.time()
         terms, entities = self._parser.parse_sentence(query)
         query_as_list = terms + entities
         # thesaurus
         extended_query = thesaurus(terms)
         searcher = Searcher(self._parser, self._indexer, model=self._model)
+        # end = time.time()
+        # print(end - start , "search 5")
         return searcher.search_with_extension(query_as_list, extended_query, k)
         # return searcher.search(query_as_list, k)
         # return extended_query

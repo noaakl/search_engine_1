@@ -12,7 +12,7 @@ class TextProcessing:
         my_stopwords = stopwords.words('english')
         my_stopwords.extend(
             ['^', '*', '&', ';', '~', 'etc', "=", "/", ")", "(", '_', '``', "''", "'", " ", ":", "?", '.', 'https', '!',
-             ',', '"', '-', '+', 'web', 'status'])
+             ',', '"', '-', '+'])
         # more stop word - probably not nesecery
         for w in my_stopwords:
             self.stop_words[w] = 0
@@ -47,11 +47,7 @@ class TextProcessing:
             if token[0].isupper():
                 final_entities += self.entity.add_to_my_entities(token, i)
 
-            elif token == 'united':
-                if i + 1 < text_tokens_len:
-                    if text_tokens[i+1] =='states':
-                        final_tokens.append("united states")
-                        skip_one = True
+
 
             # hashtag
             elif token.startswith("#"):
@@ -70,8 +66,14 @@ class TextProcessing:
 
             # word
             else:
-                final_tokens.append(token)
-                skip_one = False
+                if token == 'united':
+                    if i + 1 < text_tokens_len:
+                        if text_tokens[i + 1] == 'states':
+                            final_tokens.append("united states")
+                            skip_one = True
+                else:
+                    final_tokens.append(token)
+                    skip_one = False
 
         self.entity.clear_entities()
         final_entities = [entity for entity in final_entities if len(entity.split()) < 4]

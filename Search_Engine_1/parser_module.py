@@ -220,8 +220,8 @@ class Parse:
                 elif token_checker.lower() in covid:
                     tokens.append(covid[token_checker.lower()])
 
-                elif token_checker.lower() in trump:
-                    tokens.append(trump[token_checker.lower()])
+                # elif token_checker.lower() in trump:
+                #     tokens.append(trump[token_checker.lower()])
 
                 else:
                     tokens.append(token_checker)

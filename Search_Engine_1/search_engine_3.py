@@ -1,4 +1,5 @@
 import pickle
+import time
 
 import pandas as pd
 
@@ -59,19 +60,15 @@ class SearchEngine:
         """
         df = pd.read_parquet(fn, engine="pyarrow")
         documents_list = df.values.tolist()
-        # documents_list = self._reader.get_next_file()  # TODO: from old maybe delete
         # Iterate over every document in the file
         number_of_documents = 0
-        # while (documents_list != None):  # TODO: from old maybe delete
         for idx, document in enumerate(documents_list):
             # parse the document
             parsed_document = self._parser.parse_doc(document)
-            if not parsed_document:  # TODO: from old check if necessary
-                continue
+
             number_of_documents += 1
             # index the document data
             self._indexer.add_new_doc(parsed_document)
-        # documents_list = self._reader.get_next_file()  # TODO: from old maybe delete
 
         self._indexer.check_pending_list()
         self._indexer.calculate_and_add_idf()
@@ -116,6 +113,7 @@ class SearchEngine:
             a list of tweet_ids where the first element is the most relavant
             and the last is the least relevant result.
         """
+
         terms, entities = self._parser.parse_sentence(query)
         query_as_list = terms + entities
         # word net

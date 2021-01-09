@@ -1,4 +1,5 @@
 import pickle
+import time
 
 import pandas as pd
 from spellchecker import SpellChecker
@@ -93,15 +94,20 @@ class SearchEngine:
             a list of tweet_ids where the first element is the most relavant
             and the last is the least relevant result.
         """
-        query_as_tuple = self._parser.parse_sentence(query)
-        query_as_list = query_as_tuple[0] + query_as_tuple[1]
+        start = time.time()
+        terms, entities = self._parser.parse_sentence(query)
+        query_as_list = terms + entities
         self.spell = SpellChecker()
         self.spell._distance = 2
-        print(query_as_list)
-        query_as_list = [self.spell.correction(word) if not word.isupper() else word for word in query_as_list  ]
-        print(query_as_list)
+        corrected_words = []
+        for word in query_as_list:
+            in_dictionary = word.upper() in self._indexer.inverted_idx or word.lower() in self._indexer.inverted_idx
+            if not in_dictionary and not word.isupper():
+                corrected_words.append(self.spell.correction(word))
+            else:
+                corrected_words.append(word)
         searcher = Searcher(self._parser, self._indexer, model=self._model)
-        return searcher.search(query_as_list, k)
+        return searcher.search(corrected_words, k)
 
 
 def main():
