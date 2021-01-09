@@ -91,14 +91,15 @@ class Searcher:
     def get_extended_and_query_by_inverted_index(self, query_as_list, query_as_dict):
         index = self._indexer.get_index()
         for word in query_as_list:
-            if word.lower() in index:
-                if word.lower() in query_as_dict:
-                    query_as_dict[word.lower()] += 0.5
-                else:
-                    query_as_dict[word.lower()] = 0.5
-            elif word.upper() in index:
-                if word.lower() in query_as_dict:
-                    query_as_dict[word.lower()] += 0.5
-                else:
-                    query_as_dict[word.upper()] = 0.5
+            if word not in query_as_dict:
+                if word.lower() in index:
+                    if word.lower() in query_as_dict:
+                        query_as_dict[word.lower()] += 0.5
+                    else:
+                        query_as_dict[word.lower()] = 0.5
+                elif word.upper() in index:
+                    if word.lower() in query_as_dict:
+                        query_as_dict[word.lower()] += 0.5
+                    else:
+                        query_as_dict[word.upper()] = 0.5
         return query_as_dict
