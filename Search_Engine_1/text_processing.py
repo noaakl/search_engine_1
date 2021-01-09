@@ -20,7 +20,7 @@ class TextProcessing:
         self.entity = Entity()
         if spell_check:
             self.spell = SpellChecker()
-            self.spell._distance = 0.7
+            self.spell._distance = 2
         else:
             self.spell = None
 
@@ -43,6 +43,10 @@ class TextProcessing:
                 skip_one = False
                 continue
 
+            # stopWord
+            elif token.lower() in self.stop_words:
+                continue
+
             # names and entities
             if token[0].isupper():
                 final_entities += self.entity.add_to_my_entities(token, i)
@@ -61,10 +65,6 @@ class TextProcessing:
                 else:
                     processed_token, skip_one = self.numbers.process_numbers(token)
                 final_tokens += processed_token
-
-            # stopWord
-            elif token.lower() in self.stop_words:
-                continue
 
             # word
             else:
