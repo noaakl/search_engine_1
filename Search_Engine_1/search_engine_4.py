@@ -1,6 +1,7 @@
 import pandas as pd
 
 import global_method
+import utils
 from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
@@ -36,33 +37,22 @@ class SearchEngine:
         """
         df = pd.read_parquet(fn, engine="pyarrow")
         documents_list = df.values.tolist()
-        # documents_list = self._reader.get_next_file()  # TODO: from old maybe delete
         # Iterate over every document in the file
         number_of_documents = 0
-        # while (documents_list != None):  # TODO: from old maybe delete
         for idx, document in enumerate(documents_list):
             # parse the document
             parsed_document = self._parser.parse_doc(document)
-            if not parsed_document:  # TODO: from old check if necessary
-                continue
             number_of_documents += 1
             # index the document data
             self._indexer.add_new_doc(parsed_document)
-        # documents_list = self._reader.get_next_file()  # TODO: from old maybe delete
+
 
         self._indexer.check_pending_list()
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
         # save inverted index
-        with open("inverted_index.json", 'w') as json_file:
-            json.dump(self._indexer.inverted_idx, json_file)
-
-        # save posting dict
-        with open("posting_file.json", 'w') as json_file:
-            json.dump(self._indexer.postingDict, json_file)
-
-        # global_method.create_association_matrix(self._indexer.inverted_idx,
-        #                                         self._indexer.get_posting_dict())
+        utils.save_obj(self._indexer.inverted_idx, "inverted_idx")
+        utils.save_obj(self._indexer.postingDict, "posting")
 
         print('Finished parsing and indexing.')
 
@@ -106,6 +96,7 @@ class SearchEngine:
         # return searcher.search(query_as_list, k)
 
     def expand_query(self, query):
+        #TODO:corrolated words
         query_expanded = []
         with open("correlated_words.json", "r") as f:
             correlated_words = json.load(f)
@@ -138,7 +129,3 @@ def main():
     global_method.create_association_matrix(search_engine._indexer.inverted_idx,
                                             search_engine._indexer.get_posting_dict())
     #
-    # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-19.snappy.parquet')
-    # results =search_engine.search("covid is fun 2020 US new  wear", 40)
-    # for res in results[1]:
-    #     print(res)
