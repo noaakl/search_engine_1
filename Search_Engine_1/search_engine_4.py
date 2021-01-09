@@ -51,15 +51,8 @@ class SearchEngine:
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
         # save inverted index
-        with open("inverted_index.json", 'w') as json_file:
-            json.dump(self._indexer.inverted_idx, json_file)
-
-        # save posting dict
-        with open("posting_file.json", 'w') as json_file:
-            json.dump(self._indexer.postingDict, json_file)
-
-        # global_method.create_association_matrix(self._indexer.inverted_idx,
-        #                                         self._indexer.get_posting_dict())
+        utils.save_obj(self._indexer.inverted_idx, "inverted_idx")
+        utils.save_obj(self._indexer.postingDict, "posting")
 
         print('Finished parsing and indexing.')
 
