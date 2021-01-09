@@ -1,4 +1,6 @@
 import pandas as pd
+
+import utils
 from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
@@ -70,13 +72,12 @@ class SearchEngine:   # TODO: change
         self._indexer.check_pending_list()
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
+
         # save inverted index
-        with open("inverted_index.json", 'w') as json_file:
-            json.dump(self._indexer.inverted_idx, json_file)
+        utils.save_obj(self._indexer.inverted_idx, "inverted_idx")
 
         # save posting dict
-        with open("posting_file.json", 'w') as json_file:
-            json.dump(self._indexer.postingDict, json_file)
+        utils.save_obj(self._indexer.postingDict, "posting")
 
         print('Finished parsing and indexing.')
 

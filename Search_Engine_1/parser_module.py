@@ -28,7 +28,7 @@ shortcuts = {"aint": 'is not', "arent": 'are not', "cant": 'cannot', "cantve": '
              "wouldve": 'would have', "wouldnt": 'would not', "yall": 'you all',
              "youd": 'you would', "youll": 'you all', "youre": 'you are', "youve": 'you have'}
 
-corona = {"covid": "covid", "virus": "corona", "corona": "covid", "coronavirus": "covid", "covid19": "covid",
+corona = {"covid": "covid", "virus": "covid", "corona": "covid", "coronavirus": "covid", "covid19": "covid",
           "covid 19": "covid", "cov": "covid"}
 
 trump = {"trump": "donald trump", "donald trump": "donald trump", "president": "donald trump"}
@@ -212,10 +212,11 @@ class Parse:
             if len(token_checker) > 1:
                 if token_checker.lower() in shortcuts:
                     tokens += shortcuts[token_checker.lower()].split()
-                # elif token_checker.lower() in corona:
-                #     tokens.append(corona[token_checker.lower()])
-                # elif token_checker.lower() in corona:
-                #     tokens += corona
+                elif token_checker.lower() in corona:
+                    tokens.append(corona[token_checker.lower()])
+                elif token_checker.lower() in trump:
+                    tokens.append(trump[token_checker.lower()])
+
                 # elif token_checker.lower() in trump:
                 #     tokens += trump[token_checker.lower()]
                 else:
