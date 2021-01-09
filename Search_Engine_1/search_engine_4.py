@@ -101,8 +101,9 @@ class SearchEngine:
         query_as_tuple = self._parser.parse_sentence(query)
         query_as_list = query_as_tuple[0] + query_as_tuple[1]
         searcher = Searcher(self._parser, self._indexer, model=self._model)
-        query_as_list = self.expand_query(query_as_list)
-        return searcher.search(query_as_list, k)
+        extended_query = self.expand_query(query_as_list)
+        return searcher.search_with_extension(query_as_list, extended_query, k)
+        # return searcher.search(query_as_list, k)
 
     def expand_query(self, query):
         query_expanded = []
@@ -112,7 +113,7 @@ class SearchEngine:
             if word in correlated_words:
                 query_expanded.append(correlated_words[word][1])
                 # print(word, correlated_words[word][1])
-            query_expanded.append(word)
+            # query_expanded.append(word)
         return query_expanded
 
 

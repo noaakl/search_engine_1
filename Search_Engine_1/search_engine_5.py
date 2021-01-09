@@ -116,7 +116,7 @@ class SearchEngine:   # TODO: change
         # thesaurus
         extended_query = thesaurus(terms)
         searcher = Searcher(self._parser, self._indexer, model=self._model)
-        return searcher.search_with_extention(query_as_list, extended_query, k)
+        return searcher.search_with_extension(query_as_list, extended_query, k)
         # return searcher.search(query_as_list, k)
         # return extended_query
 

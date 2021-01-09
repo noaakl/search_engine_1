@@ -30,7 +30,7 @@ class Ranker:
             if len(query_dict) > 3 and len(relevant_docs[doc_id][1]) < 2:  # skip docs with only one word from query
                 continue
             doc_len = relevant_docs[doc_id][3]
-            upper_part = 0  # for cosSim
+            inner_product = 0  # for cosSim
             document_wij = relevant_docs[doc_id][0]
             sigma_bm25 = 0
             for term in relevant_docs[doc_id][1]:
@@ -40,12 +40,12 @@ class Ranker:
                 if term not in query_dict:
                     continue
                 wiq = query_dict[term]  # for BM25
-                upper_part += tf_idf * wiq  # for cosSim
+                inner_product += tf_idf * wiq  # for cosSim
                 sigma_bm25 += Ranker.calculate_bm25(wiq, tf, idf, doc_len)
 
             date = relevant_docs[doc_id][2]
-            cos_sim = Ranker.cos_similarity(upper_part, query_wiq, document_wij)
-            score = 0.7 * sigma_bm25 + 0.25 * cos_sim + 0.05 * date
+            cos_sim = Ranker.cos_similarity(inner_product, query_wiq, document_wij)
+            score = 0.7 * sigma_bm25 + 0.25 * cos_sim + 0.05 * date # + 0.05 * inner_product
 
             heapq.heappush(ranked_docs, [-1 * score, doc_id])
 
@@ -80,7 +80,11 @@ class Ranker:
 
     @staticmethod
     def calculate_bm25(wiq, tf, idf, doc_len):
-        k = 0.1
-        b = 0.7
+        # k = 0.01
+        # b = 0.8
+        k = 0.009
+        b = 0.85
+
         avg_doc_len = Document.get_avg_doc_len()
         return (wiq * (k + 1) * tf * idf) / (tf + k * (1 - b + (b * doc_len / avg_doc_len)))
+
