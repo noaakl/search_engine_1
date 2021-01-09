@@ -47,6 +47,11 @@ class TextProcessing:
             if token[0].isupper():
                 final_entities += self.entity.add_to_my_entities(token, i)
 
+            elif token == 'united':
+                if text_tokens[i+1] =='states':
+                    final_tokens.append("united states")
+                    skip_one = True
+
             # hashtag
             elif token.startswith("#"):
                 tokens, entities = self.split_hashtag(text_tokens[i])
