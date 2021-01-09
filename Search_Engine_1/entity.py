@@ -38,7 +38,7 @@ class Entity:
         else:
             # create new entity
             self.num_of_words = 1
-            self.current_entity = token
+            self.current_entity = token.upper()
             self.last_token = index
 
         if token.upper() in us_state_abbrev:

@@ -1,3 +1,5 @@
+import pickle
+
 import pandas as pd
 from spellchecker import SpellChecker
 
@@ -51,7 +53,7 @@ class SearchEngine:
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
         # save inverted index
-        utils.save_obj(self._indexer.inverted_idx, "inverted_idx")
+        utils.save_obj(self._indexer.inverted_idx, "idx_bench")
         utils.save_obj(self._indexer.postingDict, "posting")
 
         # save posting dict
@@ -67,7 +69,8 @@ class SearchEngine:
         Input:
             fn - file name of pickled index.
         """
-        self._indexer.load_index(fn)
+        with open(fn, 'rb') as f:
+            return pickle.load(f)
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -94,7 +97,9 @@ class SearchEngine:
         query_as_list = query_as_tuple[0] + query_as_tuple[1]
         self.spell = SpellChecker()
         self.spell._distance = 2
-        query_as_list = [self.spell.correction(word) for word in query_as_list]
+        print(query_as_list)
+        query_as_list = [self.spell.correction(word) if not word.isupper() else word for word in query_as_list  ]
+        print(query_as_list)
         searcher = Searcher(self._parser, self._indexer, model=self._model)
         return searcher.search(query_as_list, k)
 

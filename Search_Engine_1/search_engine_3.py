@@ -1,3 +1,5 @@
+import pickle
+
 import pandas as pd
 
 import utils
@@ -76,7 +78,7 @@ class SearchEngine:
         self._indexer.calculate_sigma_Wij()
 
         # save inverted index
-        utils.save_obj(self._indexer.inverted_idx, "inverted_idx")
+        utils.save_obj(self._indexer.inverted_idx, "idx_bench")
         # save posting dict
         utils.save_obj(self._indexer.postingDict, "posting")
 
@@ -90,7 +92,8 @@ class SearchEngine:
         Input:
             fn - file name of pickled index.
         """
-        self._indexer.load_index(fn)
+        with open(fn, 'rb') as f:
+            return pickle.load(f)
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -128,7 +131,7 @@ def main():
     search_engine = SearchEngine(config)
     # r'C:\Users\noaa\pycharm projects\search_engine_partC\Search_Engine_1\data\benchmark_data_train.snappy.parquet'#
     search_engine.build_index_from_parquet(
-        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\benchmark_data_train.snappy.parquet')
+        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\Search_Engine_1\data\benchmark_data_train.snappy.parquet')
     # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-16.snappy.parquet')
     # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-19.snappy.parquet')
     # results =search_engine.search("covid is fun 2020 US new  wear", 40)

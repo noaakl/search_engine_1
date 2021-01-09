@@ -70,7 +70,7 @@ class Parse:
         # print(text)
         text_tokens = self.tokenize_text(text)
         # print("after tokenize: ", text_tokens)
-        if not text_tokens: return [], []
+        # if not text_tokens: return [], []
         processed_text, entities = self.text_processing.process_text(text_tokens)
         return processed_text, entities
 
@@ -103,7 +103,7 @@ class Parse:
 
         # parse
         tokenized_text, entities = self.parse_sentence(full_text)
-        if tokenized_text == [] and entities == []: return
+        # if tokenized_text == [] and entities == []: return
         doc_length = len(tokenized_text) + len(entities)  # after text operations, with stopwords.
 
         # create term dict for the doc

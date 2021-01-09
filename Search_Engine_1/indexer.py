@@ -1,4 +1,6 @@
 import math
+import pickle
+
 import utils
 
 
@@ -151,7 +153,8 @@ class Indexer:
         Input:
             fn - file name of pickled index.
         """
-        return utils.load_obj(fn)
+        with open(fn, 'rb') as f:
+            return pickle.load(f)
 
     def save_index(self, fn):
         """

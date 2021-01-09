@@ -1,3 +1,5 @@
+import pickle
+
 import pandas as pd
 
 import utils
@@ -41,7 +43,7 @@ class SearchEngine:   # TODO: change
         self._parser = Parse()
         self._indexer = Indexer(config)
         self._model = None
-        self._reader = ReadFile(self._config.get__corpusPath())
+        # self._reader = ReadFile(self._config.get__corpusPath())
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -55,26 +57,23 @@ class SearchEngine:   # TODO: change
         """
         df = pd.read_parquet(fn, engine="pyarrow")
         documents_list = df.values.tolist()
-        # documents_list = self._reader.get_next_file()  # TODO: from old maybe delete
         # Iterate over every document in the file
         number_of_documents = 0
-        # while (documents_list != None):  # TODO: from old maybe delete
         for idx, document in enumerate(documents_list):
             # parse the document
             parsed_document = self._parser.parse_doc(document)
-            if not parsed_document:  # TODO: from old check if necessary
-                continue
+
             number_of_documents += 1
             # index the document data
             self._indexer.add_new_doc(parsed_document)
-        # documents_list = self._reader.get_next_file()  # TODO: from old maybe delete
+
 
         self._indexer.check_pending_list()
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
 
         # save inverted index
-        utils.save_obj(self._indexer.inverted_idx, "inverted_idx")
+        utils.save_obj(self._indexer.inverted_idx, "idx_bench")
         # save posting dict
         utils.save_obj(self._indexer.postingDict, "posting")
 
@@ -88,7 +87,8 @@ class SearchEngine:   # TODO: change
         Input:
             fn - file name of pickled index.
         """
-        self._indexer.load_index(fn)
+        with open(fn, 'rb') as f:
+            return pickle.load(f)
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -126,7 +126,7 @@ def main():
     search_engine = SearchEngine(config)
     # r'C:\Users\noaa\pycharm projects\search_engine_partC\Search_Engine_1\data\benchmark_data_train.snappy.parquet'#
     search_engine.build_index_from_parquet(
-        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\benchmark_data_train.snappy.parquet')
+        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\Search_Engine_1\data\benchmark_data_train.snappy.parquet')
     # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-16.snappy.parquet')
     # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-19.snappy.parquet')
     # results =search_engine.search("covid is fun 2020 US new  wear", 40)
