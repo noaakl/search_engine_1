@@ -51,7 +51,9 @@ class SearchEngine:
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
 
+        # save inverted index
         utils.save_obj(self._indexer.inverted_idx, "inverted_idx")
+        # save posting dict
         utils.save_obj(self._indexer.postingDict, "posting")
 
         print('Finished parsing and indexing.')

@@ -75,7 +75,6 @@ class SearchEngine:   # TODO: change
 
         # save inverted index
         utils.save_obj(self._indexer.inverted_idx, "inverted_idx")
-
         # save posting dict
         utils.save_obj(self._indexer.postingDict, "posting")
 
