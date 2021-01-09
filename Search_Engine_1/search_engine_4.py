@@ -61,8 +61,8 @@ class SearchEngine:
         with open("posting_file.json", 'w') as json_file:
             json.dump(self._indexer.postingDict, json_file)
 
-        global_method.create_association_matrix(self._indexer.inverted_idx,
-                                                self._indexer.get_posting_dict())
+        # global_method.create_association_matrix(self._indexer.inverted_idx,
+        #                                         self._indexer.get_posting_dict())
 
         print('Finished parsing and indexing.')
 
@@ -124,13 +124,17 @@ def main():
     search_engine.build_index_from_parquet(
         r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\Search_Engine_1\data\benchmark_data_train.snappy.parquet')
     search_engine.build_index_from_parquet(
-        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\Search_Engine_1\\data\covid19_08-04.snappy.parquet')
+        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\Search_Engine_1\data\covid19_08-04.snappy.parquet')
     search_engine.build_index_from_parquet(
-        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\Search_Engine_1\\data\covid19_07-08.snappy.parquet')
+        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\Search_Engine_1\data\covid19_07-08.snappy.parquet')
     search_engine.build_index_from_parquet(
         r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\Search_Engine_1\data\covid19_07-25.snappy.parquet')
     search_engine.build_index_from_parquet(
-        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\Search_Engine_1\data\covid19_07-24.snappy.parquet')
+        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\Search_Engine_1\data\covid19_08-06.snappy.parquet')
+    search_engine.build_index_from_parquet(
+        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\Search_Engine_1\data\covid19_08-03.snappy.parquet')
+    # search_engine.build_index_from_parquet(
+        # r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\Search_Engine_1\data\covid19_07-13.snappy.parquet')
     global_method.create_association_matrix(search_engine._indexer.inverted_idx,
                                             search_engine._indexer.get_posting_dict())
     #

@@ -123,9 +123,16 @@ def create_association_matrix(inv_index, posting_dict):
         try:
             if correlated_words[word1][0] > final_association_matrix[(word1_idx, word2_idx)]:
                 correlated_words[word1] = [final_association_matrix[(word1_idx, word2_idx)], word2]
+
         except:
             correlated_words[word1] = [final_association_matrix[(word1_idx, word2_idx)], word2]
-    print("corrolated words len: ", len(correlated_words) )
+        try:
+            if correlated_words[word2][0] > final_association_matrix[(word1_idx, word2_idx)]:
+                correlated_words[word2] = [final_association_matrix[(word1_idx, word2_idx)], word1]
+
+        except:
+            correlated_words[word2] = [final_association_matrix[(word1_idx, word2_idx)], word1]
+    print("correlated words len: ", len(correlated_words) )
     utils.save_obj(correlated_words, "correlated_words")
     # utils.save_obj(word_index, "word_index")
     # utils.save_obj(index_word_table, "index_word_table")
