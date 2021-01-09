@@ -4,23 +4,6 @@ import string
 import utils
 
 
-def expand_query(query, word_index, index_word_table):
-    if index_word_table == {} or word_index == {}: return query
-    tokens_to_add = []
-    for word in query:
-        if word.lower() in word_index.keys():
-            associate_index = word_index[word.lower()][2][0]
-            if associate_index != -1 and word_index[word.lower()][2][1] != 0:
-                if word_index[word.lower()]:
-                    associate_index = word_index[word.lower()][2][0]
-                    tokens_to_add.append(index_word_table[str(associate_index)])
-        elif word.upper() in word_index:
-            associate_index = word_index[word.upper()][2][0]
-            if associate_index != -1 and word_index[word.upper()][2][1] != 0:
-                if word_index[word.upper()]:
-                    tokens_to_add.append(index_word_table[str(associate_index)])
-    return tokens_to_add + query
-
 
 def get_matrix_shape(minimum_df, inv_index):
     shape = 0
@@ -132,7 +115,7 @@ def create_association_matrix(inv_index, posting_dict):
 
         except:
             correlated_words[word2] = [final_association_matrix[(word1_idx, word2_idx)], word1]
-    print("correlated words len: ", len(correlated_words) )
-    utils.save_obj(correlated_words, "correlated_words")
+    # print("correlated words len: ", len(correlated_words) )
+    # utils.save_obj(correlated_words, "correlated_words")
     # utils.save_obj(word_index, "word_index")
     # utils.save_obj(index_word_table, "index_word_table")

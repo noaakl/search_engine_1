@@ -136,7 +136,3 @@ def main():
     global_method.create_association_matrix(search_engine._indexer.inverted_idx,
                                             search_engine._indexer.get_posting_dict())
     #
-    # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-19.snappy.parquet')
-    # results =search_engine.search("covid is fun 2020 US new  wear", 40)
-    # for res in results[1]:
-    #     print(res)
