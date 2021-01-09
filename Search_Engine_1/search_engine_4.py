@@ -1,6 +1,7 @@
 import pandas as pd
 
 import global_method
+import utils
 from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
@@ -36,19 +37,15 @@ class SearchEngine:
         """
         df = pd.read_parquet(fn, engine="pyarrow")
         documents_list = df.values.tolist()
-        # documents_list = self._reader.get_next_file()  # TODO: from old maybe delete
         # Iterate over every document in the file
         number_of_documents = 0
-        # while (documents_list != None):  # TODO: from old maybe delete
         for idx, document in enumerate(documents_list):
             # parse the document
             parsed_document = self._parser.parse_doc(document)
-            if not parsed_document:  # TODO: from old check if necessary
-                continue
             number_of_documents += 1
             # index the document data
             self._indexer.add_new_doc(parsed_document)
-        # documents_list = self._reader.get_next_file()  # TODO: from old maybe delete
+
 
         self._indexer.check_pending_list()
         self._indexer.calculate_and_add_idf()
@@ -106,6 +103,7 @@ class SearchEngine:
         # return searcher.search(query_as_list, k)
 
     def expand_query(self, query):
+        #TODO:corrolated words
         query_expanded = []
         with open("correlated_words.json", "r") as f:
             correlated_words = json.load(f)
