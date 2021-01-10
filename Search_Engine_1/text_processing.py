@@ -17,6 +17,7 @@ class TextProcessing:
         self.numbers = NumbersProcessor()
         self.entity = Entity()
 
+
     def process_text(self, text_tokens):
         """
         :param text_tokens: list of strings
@@ -29,7 +30,6 @@ class TextProcessing:
 
         for i in range(text_tokens_len):
             token = text_tokens[i]
-
             # check if needs to skip one token
             if skip_one:
                 skip_one = False

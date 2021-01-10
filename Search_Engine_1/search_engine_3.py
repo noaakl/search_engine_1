@@ -1,4 +1,6 @@
+import pickle
 import pandas as pd
+import utils
 from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
@@ -8,6 +10,7 @@ from nltk.corpus import wordnet
 
 
 def word_net(terms):
+
     extended_terms = set()
     for query_word in terms:
         synset = wordnet.synsets(query_word)
@@ -17,6 +20,7 @@ def word_net(terms):
             name = syn.name()
             if name.islower() and not name.__contains__('_') and not name.__contains__('-') and name != "corona":
                 extended_terms.add(name)
+
     return list(extended_terms)
 
 
@@ -52,7 +56,6 @@ class SearchEngine:
         for idx, document in enumerate(documents_list):
             # parse the document
             parsed_document = self._parser.parse_doc(document)
-
             number_of_documents += 1
             # index the document data
             self._indexer.add_new_doc(parsed_document)
@@ -60,6 +63,9 @@ class SearchEngine:
         self._indexer.check_pending_list()
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
+
+
+
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -81,7 +87,7 @@ class SearchEngine:
         """
         pass
 
-    def search(self, query, k=None):
+    def search(self, query, k=None):  # TODO: change
         """
         Executes a query over an existing index and returns the number of
         relevant docs and an ordered list of search results.
@@ -101,5 +107,3 @@ class SearchEngine:
         return searcher.search_with_extension(query_as_list, extended_query, k)
 
 
-def main():
-    pass

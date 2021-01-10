@@ -83,6 +83,3 @@ class SearchEngine:
         searcher = Searcher(self._parser, self._indexer, model=self._model)
         return searcher.search(query_as_list, k)
 
-
-def main():
-    pass

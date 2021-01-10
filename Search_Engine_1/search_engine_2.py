@@ -93,8 +93,6 @@ class SearchEngine:
         return searcher.search(corrected_words, k)
 
 
-def main():
-    pass
 
 
 

@@ -57,9 +57,13 @@ class SearchEngine:
             # index the document data
             self._indexer.add_new_doc(parsed_document)
 
+
         self._indexer.check_pending_list()
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
+
+
+
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -92,7 +96,6 @@ class SearchEngine:
             a list of tweet_ids where the first element is the most relavant
             and the last is the least relevant result.
         """
-        # start = time.time()
         terms, entities = self._parser.parse_sentence(query)
         query_as_list = terms + entities
         # thesaurus
@@ -101,5 +104,4 @@ class SearchEngine:
         return searcher.search_with_extension(query_as_list, extended_query, k)
 
 
-def main():
-    pass
+

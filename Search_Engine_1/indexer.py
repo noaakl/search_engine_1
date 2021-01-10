@@ -210,7 +210,6 @@ class Indexer:
             if entity.lower() in self.inverted_idx:
                 # Update inverted index
                 self.inverted_idx[entity.lower()][0] += 1
-                # self.inverted_idx[entity.lower()][1] += self.entities[entity][1]
 
                 # Update posting dict
                 if entity.lower() in self.postingDict:
@@ -230,6 +229,5 @@ class Indexer:
             df = document.term_doc_dictionary[word.lower()]
         else:
             df = document.entity_dict[word.upper()]
-        # tf = int(df) / document.get_num_of_uniq_words()
         tf = int(df) / document.doc_length
         return [tf, df]

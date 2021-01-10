@@ -19,7 +19,6 @@ class SearchEngine:
         self._parser = Parse()
         self._indexer = Indexer(self._config)
         self._model = None
-        self._reader = ReadFile(self._config.get__corpusPath())
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -84,5 +83,3 @@ class SearchEngine:
         return searcher.search(query_as_list, k)
 
 
-def main():
-    pass
