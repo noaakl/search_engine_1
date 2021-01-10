@@ -1,7 +1,6 @@
 import re
 import string
 from nltk.corpus import stopwords
-import configuration
 from document import Document
 import stemmer
 from text_processing import TextProcessing
@@ -43,7 +42,7 @@ def parse_url(url):
 
 class Parse:
 
-    def __init__(self, spell_check=False):
+    def __init__(self):
         self.stemmer = stemmer.Stemmer()
         self.text_processing = TextProcessing()
         self.num_of_docs = 0

@@ -1,6 +1,5 @@
 import pandas as pd
 from configuration import ConfigClass
-from document import Document
 from parser_module import Parse
 from indexer import Indexer
 from searcher import Searcher
@@ -49,8 +48,6 @@ class SearchEngine:
         df = pd.read_parquet(fn, engine="pyarrow")
         documents_list = df.values.tolist()
         # Iterate over every document in the file
-        Document.avg_doc_len = [0, 0]
-
         for idx, document in enumerate(documents_list):
             # parse the document
             parsed_document = self._parser.parse_doc(document)

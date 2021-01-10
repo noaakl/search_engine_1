@@ -1,7 +1,4 @@
-import pickle
 import pandas as pd
-import utils
-from document import Document
 from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
@@ -11,7 +8,6 @@ from nltk.corpus import wordnet
 
 
 def word_net(terms):
-
     extended_terms = set()
     for query_word in terms:
         synset = wordnet.synsets(query_word)
@@ -53,10 +49,6 @@ class SearchEngine:
         df = pd.read_parquet(fn, engine="pyarrow")
         documents_list = df.values.tolist()
         # Iterate over every document in the file
-
-
-        Document.avg_doc_len = [0, 0]
-
         for idx, document in enumerate(documents_list):
             # parse the document
             parsed_document = self._parser.parse_doc(document)
@@ -67,9 +59,6 @@ class SearchEngine:
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
         self._indexer.calculate_avg_doc_len()
-
-
-
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -109,5 +98,3 @@ class SearchEngine:
         extended_query = word_net(terms)
         searcher = Searcher(self._parser, self._indexer, model=self._model)
         return searcher.search_with_extension(query_as_list, extended_query, k)
-
-

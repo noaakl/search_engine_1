@@ -1,8 +1,5 @@
 import heapq
 import math
-
-
-from document import Document
 from indexer import Indexer
 
 

@@ -2,10 +2,7 @@ import math
 import pickle
 import utils
 
-
 # DO NOT MODIFY CLASS NAME
-from document import Document
-
 
 class Indexer:
     num_of_docs = 0
