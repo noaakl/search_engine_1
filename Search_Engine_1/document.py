@@ -1,7 +1,5 @@
 class Document:
 
-    avg_doc_len = [0, 0]
-
     def __init__(self, tweet_id, tweet_date=None, full_text=None, url=None, retweet_text=None, retweet_url=None,
                  quote_text=None, quote_url=None, term_doc_dictionary=None, doc_length=0, entity_dict=None, max_f=0):
         """
@@ -39,7 +37,4 @@ class Document:
     def get_num_of_uniq_words(self):
         return len(self.term_doc_dictionary) + len(self.entity_dict)
 
-    @classmethod
-    def get_avg_doc_len(cls):
-        return Document.avg_doc_len[0] / Document.avg_doc_len[1]
 
