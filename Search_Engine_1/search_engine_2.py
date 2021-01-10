@@ -38,9 +38,6 @@ class SearchEngine:
         documents_list = df.values.tolist()
         # Iterate over every document in the file
         number_of_documents = 0
-
-        Document.avg_doc_len = [0, 0]
-
         for idx, document in enumerate(documents_list):
             # parse the document
             parsed_document = self._parser.parse_doc(document)
