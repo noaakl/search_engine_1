@@ -1,15 +1,11 @@
 import pickle
-
 import pandas as pd
-
-import global_method
 import utils
 from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
 from indexer import Indexer
 from searcher import Searcher
-import json
 
 
 # DO NOT CHANGE THE CLASS NAME
@@ -57,7 +53,6 @@ class SearchEngine:
         utils.save_obj(self._indexer.inverted_idx, "idx_bench")
         # save posting dict
         utils.save_obj(self._indexer.postingDict, "posting")
-        print(len(self._indexer.inverted_idx))
         print('Finished parsing and indexing.')
 
     # DO NOT MODIFY THIS SIGNATURE
@@ -99,11 +94,4 @@ class SearchEngine:
 
 
 def main():
-    config = ConfigClass()
-    search_engine = SearchEngine(config)
-    # r'C:\Users\noaa\pycharm projects\search_engine_partC\Search_Engine_1\data\benchmark_data_train.snappy.parquet'#
-    search_engine.build_index_from_parquet(r'C:\Users\Ophir Porat\PycharmProjects\search_engine_1\Search_Engine_1\data\benchmark_data_train.snappy.parquet')
-    # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\Search_Engine_1\\data\covid19_07-13.snappy.parquet')
-    # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\Search_Engine_1\\data\covid19_07-19.snappy.parquet')
-    # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\Search_Engine_1\\data\covid19_07-16.snappy.parquet')
-
+    pass

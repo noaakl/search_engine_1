@@ -29,10 +29,13 @@ class NumbersProcessor:
             return final_tokens, skip_one
         # just numbers
         just_number_token, skip_one = self.just_numbers(token1, token2)
+        if not just_number_token:
+            return final_tokens, False
         if just_number_token != token1:
             final_tokens.append(just_number_token)
             # skip_one = True
             return final_tokens, skip_one
+
         # dollar
         elif token2 is not None and token2.lower() in self.price_dict.keys():
             final_tokens.append(token1 + self.price_dict[token2.lower()])
@@ -99,8 +102,11 @@ class NumbersProcessor:
                     else:
                         formed_number  =list_to_format[0]
                 except:
-                    list_to_format[1] = list_to_format[1][0:3]
-                    formed_number = list_to_format[0] + '.' + list_to_format[1]
+                    try:
+                        list_to_format[1] = list_to_format[1][0:3]
+                        formed_number = list_to_format[0] + '.' + list_to_format[1]
+                    except:
+                        return None, False
 
                 formed_number = str(formed_number) + self.number_form_dict[divide]
             return formed_number, multiply != 1
@@ -140,6 +146,3 @@ class NumbersProcessor:
     def is_number(self, num):
         boolean =  (self.is_float(num) or self.is_fraction(num) or self.is_int(num)) and self.is_num_without_letters(num)
         return boolean
-
-# num_processor =NumbersProcessor()
-# print(num_processor.just_numbers("42300" , "hundred"))

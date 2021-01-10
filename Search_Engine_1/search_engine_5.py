@@ -15,9 +15,6 @@ from nltk.corpus import lin_thesaurus as linthesaurus
 
 # DO NOT CHANGE THE CLASS NAME
 def thesaurus(terms):
-    # TODO: without corona
-    # TODO: think if save num of words or set
-    # TODO: לחשוב על דרך לתת למילים המוספות פחות משקל
     extended_terms = set()
     for query_word in terms:
         if query_word == "trump":
@@ -32,7 +29,7 @@ def thesaurus(terms):
     return list(extended_terms)
 
 
-class SearchEngine:   # TODO: change
+class SearchEngine:
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implementation, but you must have a parser and an indexer.
@@ -118,39 +115,10 @@ class SearchEngine:   # TODO: change
         # thesaurus
         extended_query = thesaurus(terms)
         searcher = Searcher(self._parser, self._indexer, model=self._model)
-        # end = time.time()
-        # print(end - start , "search 5")
         return searcher.search_with_extension(query_as_list, extended_query, k)
-        # return searcher.search(query_as_list, k)
-        # return extended_query
+
 
 
 def main():
-    config = ConfigClass()
-    search_engine = SearchEngine(config)
-    # r'C:\Users\noaa\pycharm projects\search_engine_partC\Search_Engine_1\data\benchmark_data_train.snappy.parquet'#
-    search_engine.build_index_from_parquet(
-        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\Search_Engine_1\data\benchmark_data_train.snappy.parquet')
-    # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-16.snappy.parquet')
-    # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-19.snappy.parquet')
-    # results =search_engine.search("covid is fun 2020 US new  wear", 40)
-    # for res in results[1]:
-    #     print(res)
+    pass
 
-
-# terms = ["donald", "trump", "covid", "corona", "donald trump", "covid 19", "sars"]
-# extended_terms = set(terms)
-# for query_word in terms:
-#     # print("word: " + query_word)
-#     synonyms = linthesaurus.synonyms(query_word)
-#     for sim, keys in synonyms:
-#         if len(keys) > 1:
-#             keys_list = list(keys)
-#             # print("full list is: " + str(keys_list))
-#             if len(keys_list) > 2: keys_list = keys_list[:2]  # add only 2
-#             # print("short list is: " + str(keys_list))
-#             print(query_word + ": ")
-#             for key in keys_list:
-#                 print(key)
-#             extended_terms.update(keys_list)
-# print(list(extended_terms))

@@ -1,15 +1,11 @@
 import pickle
-import time
-
 import pandas as pd
-
 import utils
 from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
 from indexer import Indexer
 from searcher import Searcher
-import json
 from nltk.corpus import wordnet
 
 
@@ -120,38 +116,8 @@ class SearchEngine:
         extended_query = word_net(terms)
         searcher = Searcher(self._parser, self._indexer, model=self._model)
         return searcher.search_with_extension(query_as_list, extended_query, k)
-        # return searcher.search(query_as_list, k)
-        # return extended_query
+
 
 
 def main():
-    config = ConfigClass()
-    search_engine = SearchEngine(config)
-    # r'C:\Users\noaa\pycharm projects\search_engine_partC\Search_Engine_1\data\benchmark_data_train.snappy.parquet'#
-    search_engine.build_index_from_parquet(
-        r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\Search_Engine_1\data\benchmark_data_train.snappy.parquet')
-    # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-16.snappy.parquet')
-    # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\data\covid19_07-19.snappy.parquet')
-    # results =search_engine.search("covid is fun 2020 US new  wear", 40)
-    # for res in results[1]:
-    #     print(res)
-
-
-# terms = ["donald", "trump", "covid", "corona", "donald trump", "covid 19"]
-# extended_terms = set(terms)
-# for query_word in terms:
-#     # print("word: " + query_word)
-#     synset = wordnet.synsets(query_word)
-#     if len(synset) > 0:
-#         synset_lemmas = synset[0].lemmas()
-#         if len(synset_lemmas) > 3:synset_lemmas = synset_lemmas[:3]  # add not more than 3
-#         # print("sort list is: ")
-#         for syn in synset_lemmas:
-#         # syn = synset_lemmas[0]  # add only one
-#             name = syn.name()
-#             if name.islower() and not name.__contains__('_') and not name.__contains__('-'):
-#                 print(query_word + ": " + name)
-#                 extended_terms.add(name)
-#                 # print(name)
-# print(list(extended_terms))
-
+    pass

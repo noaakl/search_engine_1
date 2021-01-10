@@ -99,8 +99,4 @@ class SearchEngine:
 
 
 def main():
-    config = ConfigClass()
-    search_engine = SearchEngine(config)
-    # r'C:\Users\noaa\pycharm projects\search_engine_partC\Search_Engine_1\data\benchmark_data_train.snappy.parquet'#
-    search_engine.build_index_from_parquet(r'C:\Users\Ophir Porat\PycharmProjects\search_engine_1\Search_Engine_1\data\benchmark_data_train.snappy.parquet')
-
+    pass

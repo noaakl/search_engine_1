@@ -36,15 +36,16 @@ class Indexer:
             try:
                 self.add_term(document, term)
             except:
-                print('problem with the following key {}'.format(term))
+                pass
+                # print('problem with the following key {}'.format(term))
 
         for entity in doc_entity_dict:
             try:
                 self.add_entity(document, entity)
             except:
-                print('problem with the following key {}'.format(entity))
+                pass
+                # print('problem with the following key {}'.format(entity))
 
-        # self.postingDict[term].append((document.tweet_id, doc_term_dict[term])) TODO: check if ok or change to this format
         doc_term_dict.update(doc_entity_dict)
         self.doc_file[document.tweet_id] = document.get_doc_info()
         self.doc_file[document.tweet_id][0]= doc_term_dict #doc_id : [ term_dict, date]
@@ -70,7 +71,7 @@ class Indexer:
 
         # term is already in inverted_idx as an entity
         elif term.upper() in self.inverted_idx:
-            change_upper_to_lower = True  # TODO: add if term.islower() ?
+            change_upper_to_lower = True
             self.inverted_idx[term.upper()][0] += 1
             # self.inverted_idx[term.upper()][1] += doc_term_dict[term]
 

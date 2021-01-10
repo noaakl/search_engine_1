@@ -32,7 +32,7 @@ covid = {"covid19": "covid", "covid 19": "covid", "cov": "covid"}
 
 corona = {"coronavirus": "corona", "pandemic": "corona"}
 
-trump = {"donald": "trump", "president": "trump"}
+
 
 
 def parse_url(url):
@@ -58,8 +58,7 @@ class Parse:
         self.punctuation.pop('@')
         self.punctuation.pop('%')
         self.stop_words = stopwords.words('english')
-        # self.stop_words.extend( ['_','``', "''", "'", " ", ":", "?", '.', 'https', '!', ',', '"', '^', '*', '&',
-        # ';', '~', 'etc', '-', '+', "=","/",")","("])
+
 
     def parse_sentence(self, text):
         """
@@ -193,7 +192,7 @@ class Parse:
                         elif char in "\/":
                             if not token_checker.isdigit() and not token_checker[0].isupper():
                                 token_splited = re.split('[\/]', token)
-                                tokens += [word for word in token_splited if word]
+                                tokens += [word for word in token_splited if word and len(word)>1]
                                 token_checker = ''
                                 break
                         elif char == "'" or char == '’':
@@ -219,9 +218,6 @@ class Parse:
 
                 elif token_checker.lower() in covid:
                     tokens.append(covid[token_checker.lower()])
-
-                # elif token_checker.lower() in trump:
-                #     tokens.append(trump[token_checker.lower()])
 
                 else:
                     tokens.append(token_checker)

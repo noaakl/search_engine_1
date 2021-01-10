@@ -1,17 +1,13 @@
 import pickle
 import time
-
 import pandas as pd
 from spellchecker import SpellChecker
-
-import global_method
 import utils
 from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
 from indexer import Indexer
 from searcher import Searcher
-import json
 
 
 # DO NOT CHANGE THE CLASS NAME
@@ -111,11 +107,7 @@ class SearchEngine:
 
 
 def main():
-    config = ConfigClass()
-    search_engine = SearchEngine(config)
-    # r'C:\Users\noaa\pycharm projects\search_engine_partC\Search_Engine_1\data\benchmark_data_train.snappy.parquet'#
-    search_engine.build_index_from_parquet(r'C:\Users\Ophir Porat\PycharmProjects\search_engine_1\Search_Engine_1\data\benchmark_data_train.snappy.parquet')
-    # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\Search_Engine_1\\data\covid19_08-04.snappy.parquet')
-    # search_engine.build_index_from_parquet(r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\\Search_Engine_1\\data\covid19_07-19.snappy.parquet')
+    pass
+
 
 

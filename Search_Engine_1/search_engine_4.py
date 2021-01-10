@@ -109,29 +109,10 @@ class SearchEngine:
                 correlated_word = correlated_words[word][1]
                 print(word , correlated_word)
                 query_expanded.append(correlated_word)
-                # print(word, correlated_words[word][1])
-            # query_expanded.append(word)
         return query_expanded
 
 
 def main():
-    config = ConfigClass()
-    search_engine = SearchEngine(config)
-    # r'C:\Users\noaa\pycharm projects\search_engine_partC\Search_Engine_1\data\benchmark_data_train.snappy.parquet'#
-    # search_engine.build_index_from_parquet(
-    #     r'C:\\Users\\Ophir Porat\\PycharmProjects\\search_engine_1\Search_Engine_1\data\benchmark_data_train.snappy.parquet')
-    # search_engine.build_index_from_parquet(
-    #     r'C:\\Users\Ophir Porat\PycharmProjects\search_engine_1\Search_Engine_1\data\covid19_08-04.snappy.parquet')
-    # search_engine.build_index_from_parquet(
-    #     r'C:\\Users\Ophir Porat\PycharmProjects\search_engine_1\Search_Engine_1\data\covid19_07-08.snappy.parquet')
-    # search_engine.build_index_from_parquet(
-    #     r'C:\\Users\Ophir Porat\PycharmProjects\search_engine_1\Search_Engine_1\data\covid19_07-25.snappy.parquet')
-    # search_engine.build_index_from_parquet(
-    #     r'C:\\Users\Ophir Porat\\PycharmProjects\search_engine_1\Search_Engine_1\data\covid19_08-06.snappy.parquet')
-    # search_engine.build_index_from_parquet(
-    #     r'C:\\Users\Ophir Porat\PycharmProjects\\search_engine_1\Search_Engine_1\data\covid19_08-03.snappy.parquet')
-    # search_engine.build_index_from_parquet(
-    #     r'C:\\Users\Ophir Porat\PycharmProjects\search_engine_1\Search_Engine_1\data\covid19_07-13.snappy.parquet')
+    pass
 
-    # global_method.create_association_matrix(search_engine._indexer.inverted_idx, search_engine._indexer.get_posting_dict())
 
