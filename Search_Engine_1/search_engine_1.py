@@ -1,4 +1,5 @@
 import pandas as pd
+import utils
 from document import Document
 from reader import ReadFile
 from configuration import ConfigClass
@@ -35,17 +36,22 @@ class SearchEngine:
         df = pd.read_parquet(fn, engine="pyarrow")
         documents_list = df.values.tolist()
         # Iterate over every document in the file
-        number_of_documents = 0
+
+        Document.avg_doc_len = [0, 0]
+
         for idx, document in enumerate(documents_list):
             # parse the document
             parsed_document = self._parser.parse_doc(document)
-            number_of_documents += 1
+
             # index the document data
             self._indexer.add_new_doc(parsed_document)
 
         self._indexer.check_pending_list()
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
+        self._indexer.calculate_avg_doc_len()
+
+
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -82,4 +88,3 @@ class SearchEngine:
         query_as_list = query_as_tuple[0] + query_as_tuple[1]
         searcher = Searcher(self._parser, self._indexer, model=self._model)
         return searcher.search(query_as_list, k)
-

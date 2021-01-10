@@ -38,17 +38,20 @@ class SearchEngine:
         df = pd.read_parquet(fn, engine="pyarrow")
         documents_list = df.values.tolist()
         # Iterate over every document in the file
-        number_of_documents = 0
+
+        Document.avg_doc_len = [0, 0]
+
         for idx, document in enumerate(documents_list):
             # parse the document
             parsed_document = self._parser.parse_doc(document)
-            number_of_documents += 1
+
             # index the document data
             self._indexer.add_new_doc(parsed_document)
 
         self._indexer.check_pending_list()
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
+        self._indexer.calculate_avg_doc_len()
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -87,10 +90,8 @@ class SearchEngine:
         searcher = Searcher(self._parser, self._indexer, model=self._model)
         extended_query = self.expand_query(query_as_list)
         return searcher.search_with_extension(query_as_list, extended_query, k)
-        # return searcher.search(query_as_list, k)
 
     def expand_query(self, query):
-        # TODO:corrolated words
         query_expanded = []
         with open("correlated_words.json", "r") as f:
             correlated_words = json.load(f)

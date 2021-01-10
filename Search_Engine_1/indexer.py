@@ -49,7 +49,7 @@ class Indexer:
 
         Indexer.num_of_docs += 1
         Indexer.sum_of_len += document.get_num_of_uniq_words()
-        Indexer.avg_doc_len = Indexer.sum_of_len / Indexer.num_of_docs
+
 
         doc_term_dict.update(doc_entity_dict)
         self.doc_file[document.tweet_id] = document.get_doc_info()
@@ -151,7 +151,7 @@ class Indexer:
         self.postingDict = indexer[1]
         self.doc_file = indexer[2]
         self.entities = {}
-        self.avg_doc_len = indexer[3]
+        Indexer.avg_doc_len = indexer[3]
 
     def save_index(self, fn):
         """
@@ -241,3 +241,6 @@ class Indexer:
             df = document.entity_dict[word.upper()]
         tf = int(df) / document.doc_length
         return [tf, df]
+
+    def calculate_avg_doc_len(self):
+        Indexer.avg_doc_len = Indexer.sum_of_len / Indexer.num_of_docs

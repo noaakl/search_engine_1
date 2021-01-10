@@ -46,6 +46,7 @@ class SearchEngine:
         self._indexer.check_pending_list()
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
+        self._indexer.calculate_avg_doc_len()
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.

@@ -62,8 +62,9 @@ def create_association_matrix(inv_index, posting_dict):
                             association_matrix[(i, j)] = word_index[word1][1][d] * word_index[word2][1][d]
 
                     except:
-                        print(str(i), word1, " , ", str(j), word2)
-                        print("num_of_terms = " + num_of_terms, " size = " + size)
+                        pass
+                        # print(str(i), word1, " , ", str(j), word2)
+                        # print("num_of_terms = " + num_of_terms, " size = " + size)
     for word in word_index:
         word_index[word][1] = 0
 
