@@ -1,7 +1,6 @@
 from ranker import Ranker
 
 
-
 # DO NOT MODIFY CLASS NAME
 class Searcher:
     # DO NOT MODIFY THIS SIGNATURE

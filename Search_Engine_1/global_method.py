@@ -1,5 +1,3 @@
-
-
 def get_matrix_shape(minimum_df, inv_index):
     shape = 0
     for word in inv_index:
@@ -22,7 +20,7 @@ def create_association_matrix(inv_index, posting_dict):
 
     size = get_matrix_shape(minimum_df, inv_index)
     association_matrix = {}
-    print("start first matrix")
+    # start first matrix
     index = 0
 
     num_of_terms = 0
@@ -69,13 +67,9 @@ def create_association_matrix(inv_index, posting_dict):
     for word in word_index:
         word_index[word][1] = 0
 
-
     # final_association_matrix = [[0 for i in range(size)] for j in range(size)]
-    print("start second matrix")
+    # start second matrix
     final_association_matrix = {}
-    if len(word_index) != size:
-        print("size not equal ")
-        return
     for i in range(size):
         for j in range(size):
             try:
@@ -92,7 +86,7 @@ def create_association_matrix(inv_index, posting_dict):
                             final_association_matrix[(j, i)] = calculation
             except:
                 print(i, j)
-    print("start correlated words")
+    # start correlated words
     correlated_words = {}
     for word1_idx, word2_idx in final_association_matrix.keys():
         word1 = index_word_table[word1_idx]
@@ -109,4 +103,3 @@ def create_association_matrix(inv_index, posting_dict):
 
         except:
             correlated_words[word2] = [final_association_matrix[(word1_idx, word2_idx)], word1]
-

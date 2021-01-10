@@ -1,4 +1,3 @@
-from decimal import Decimal
 import re
 
 
@@ -69,38 +68,30 @@ class NumbersProcessor:
         :param num: string
         :return:
         """
-        # num_list = num.split('.')
-        # if len(num_list)>2:
-            # friction or something else
-            # return num,False
         if num.__contains__('/'):
-            return num , False
+            return num, False
         else:
-            # remove_comma = num.replace(',', '')
             multiply = 1
             if token2 is not None:
-                # if self.is_fraction(token2[0]):
-                #     return remove_comma + " " + token2, True
                 if token2.lower() in self.number_dict:
-                    multiply=self.number_dict[token2.lower()]
+                    multiply = self.number_dict[token2.lower()]
             new_number = float(float(num) * multiply)
             if new_number < 1000:
                 return num, False
 
             divide = 1000000000.0
-            while new_number < divide and divide >1:
-                # print(num,new_number,token2 , divide)
+            while new_number < divide and divide > 1:
                 divide = divide / 1000.0
             formed_number = num
             if divide != 1:
-                formed_number= float(float(new_number) / divide)
+                formed_number = float(float(new_number) / divide)
                 list_to_format = str(formed_number).split('.')
                 try:
-                    if int(list_to_format[1]) >0 :
+                    if int(list_to_format[1]) > 0:
                         list_to_format[1] = list_to_format[1][0:3]
-                        formed_number =list_to_format[0] + '.' +list_to_format[1]
+                        formed_number = list_to_format[0] + '.' + list_to_format[1]
                     else:
-                        formed_number  =list_to_format[0]
+                        formed_number = list_to_format[0]
                 except:
                     try:
                         list_to_format[1] = list_to_format[1][0:3]
@@ -144,5 +135,5 @@ class NumbersProcessor:
             return False
 
     def is_number(self, num):
-        boolean =  (self.is_float(num) or self.is_fraction(num) or self.is_int(num)) and self.is_num_without_letters(num)
+        boolean = (self.is_float(num) or self.is_fraction(num) or self.is_int(num)) and self.is_num_without_letters(num)
         return boolean

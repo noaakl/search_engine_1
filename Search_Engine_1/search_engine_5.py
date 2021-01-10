@@ -57,13 +57,9 @@ class SearchEngine:
             # index the document data
             self._indexer.add_new_doc(parsed_document)
 
-
         self._indexer.check_pending_list()
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
-
-
-
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -107,4 +103,3 @@ class SearchEngine:
 
 def main():
     pass
-

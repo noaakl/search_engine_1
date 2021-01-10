@@ -1,7 +1,6 @@
 import re
 import string
 from nltk.corpus import stopwords
-import configuration
 from document import Document
 import stemmer
 from text_processing import TextProcessing
@@ -33,8 +32,6 @@ covid = {"covid19": "covid", "covid 19": "covid", "cov": "covid"}
 corona = {"coronavirus": "corona", "pandemic": "corona"}
 
 
-
-
 def parse_url(url):
     delimiters = '[/=+:?><.-}{]'
     url = url.replace('[', '')
@@ -49,8 +46,6 @@ class Parse:
         self.stemmer = stemmer.Stemmer()
         self.text_processing = TextProcessing()
         self.num_of_docs = 0
-        # self.config = config
-        # ************************
         self.punctuation = {}
         for item in string.punctuation + '’' + ' ' + "\n":
             self.punctuation[item] = 0
@@ -59,17 +54,13 @@ class Parse:
         self.punctuation.pop('%')
         self.stop_words = stopwords.words('english')
 
-
     def parse_sentence(self, text):
         """
         This function tokenize the text and split it to terms (lower case) and entities (upper case)
         :param text: string of the full text of a document
         :return: processed_text: list of terms, entities: list of entities
         """
-        # print(text)
         text_tokens = self.tokenize_text(text)
-        # print("after tokenize: ", text_tokens)
-        # if not text_tokens: return [], []
         processed_text, entities = self.text_processing.process_text(text_tokens)
         return processed_text, entities
 
@@ -82,14 +73,14 @@ class Parse:
         :return: Document object with corresponding fields.
         """
         needs_to_stem = False
-        # self.config.toStem
 
         # create doc info
         tweet_id = doc_as_list[0]
-        date_distance = datetime.strptime("Sun Jan 10 05:03:50 +0000 2021", "%a %b %d %H:%M:%S %z %Y") - datetime.strptime(doc_as_list[1], "%a %b %d %H:%M:%S %z %Y")
+        date_distance = datetime.strptime("Sun Jan 10 05:03:50 +0000 2021",
+                                          "%a %b %d %H:%M:%S %z %Y") - datetime.strptime(doc_as_list[1],
+                                                                                         "%a %b %d %H:%M:%S %z %Y")
         formatted_date_distance = str(date_distance).split(',')[1].replace(':', '')
-        tweet_date = -int(formatted_date_distance)/999999
-        # print(tweet_date)
+        tweet_date = -int(formatted_date_distance) / 999999
         full_text = doc_as_list[2]
         url = doc_as_list[3]
         retweet_text = doc_as_list[4]
@@ -102,7 +93,6 @@ class Parse:
 
         # parse
         tokenized_text, entities = self.parse_sentence(full_text)
-        # if tokenized_text == [] and entities == []: return
         doc_length = len(tokenized_text) + len(entities)  # after text operations, with stopwords.
 
         # create term dict for the doc
@@ -140,10 +130,6 @@ class Parse:
         # create doc
         document = Document(tweet_id, tweet_date, full_text, url, retweet_text, retweet_url, quote_text,
                             quote_url, term_dict, doc_length, entity_dict, max_f)
-        # print("document Id : " + tweet_id)
-        # print("entities : " + str(entity_dict))
-        # print("terms : " + str(term_dict))
-        # print("*********************************************************")
 
         Document.avg_doc_len[0] += document.get_num_of_uniq_words()
         # Document.avg_doc_len[0] += doc_length
@@ -152,12 +138,9 @@ class Parse:
 
     def tokenize_text(self, text):
         tokens = []
-        # first_tokens = []
         first_tokens = text.split()
-        # print(first_tokens)
         if first_tokens[0].lower() == 'rt': first_tokens.pop(0)
         for token in first_tokens:
-            flag = 0
             if 'http' in token:
                 continue
             token_checker = ''
@@ -166,7 +149,6 @@ class Parse:
 
                 if char in self.punctuation.keys():
                     if token.endswith(char) or token.startswith(char):
-                        # tokens.append(token_checker)
                         continue
 
                     elif len(token_checker) > 0:
@@ -174,17 +156,12 @@ class Parse:
                             continue
                         if char == '-':
                             if token_checker[len(token_checker) - 1] != '-':
-                                if not token[len(token) -1].isdigit() and not token[len(token) -1] in self.punctuation:
-                                # if  token_checker[0].isupper() or token[len(token_checker) - 1].isdigit():
+                                if not token[len(token) - 1].isdigit() and not token[
+                                                                                   len(token) - 1] in self.punctuation:
                                     token_checker += ' '
                                     continue
                                 else:
                                     break
-
-                                # else:
-                                #     tokens.append(token_checker)
-                                #     token_checker = ''
-                                #     continue
 
                         elif char == "." and token_checker[len(token_checker) - 1].isdigit():
                             token_checker += char
@@ -192,7 +169,7 @@ class Parse:
                         elif char in "\/":
                             if not token_checker.isdigit() and not token_checker[0].isupper():
                                 token_splited = re.split('[\/]', token)
-                                tokens += [word for word in token_splited if word and len(word)>1]
+                                tokens += [word for word in token_splited if word and len(word) > 1]
                                 token_checker = ''
                                 break
                         elif char == "'" or char == '’':
@@ -201,10 +178,8 @@ class Parse:
                             if token.startswith('@') or token.startswith('#'):
                                 token_checker += char
                                 continue
-                        # token_checker += char
                         tokens.append(token_checker)
                         token_checker = ''
-                    # tokens.append(char)
 
                 else:
                     token_checker += char
@@ -223,6 +198,3 @@ class Parse:
                     tokens.append(token_checker)
 
         return tokens
-
-# parser = Parse()
-# print(parser.parse_sentence("@Lost_Toddler My only point was that Covid-19 is not a virus. It is the disease or set of symptoms CAUSED by the virus named either Coronavirus-2 or SARS-Cov-2"))

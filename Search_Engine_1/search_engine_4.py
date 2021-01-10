@@ -1,10 +1,4 @@
-import pickle
-
 import pandas as pd
-
-import global_method
-import utils
-from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
 from indexer import Indexer
@@ -25,7 +19,6 @@ class SearchEngine:
         self._parser = Parse()
         self._indexer = Indexer(config)
         self._model = None
-        # self._reader = ReadFile(self._config.get__corpusPath())
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -51,8 +44,6 @@ class SearchEngine:
         self._indexer.check_pending_list()
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
-
-
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -94,19 +85,17 @@ class SearchEngine:
         # return searcher.search(query_as_list, k)
 
     def expand_query(self, query):
-        #TODO:corrolated words
+        # TODO:corrolated words
         query_expanded = []
         with open("correlated_words.json", "r") as f:
             correlated_words = json.load(f)
         for word in query:
             if word in correlated_words:
                 correlated_word = correlated_words[word][1]
-                print(word , correlated_word)
+                print(word, correlated_word)
                 query_expanded.append(correlated_word)
         return query_expanded
 
 
 def main():
     pass
-
-

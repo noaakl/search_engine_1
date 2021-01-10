@@ -48,10 +48,6 @@ class Ranker:
             heapq.heappush(ranked_docs, [-1 * score, doc_id])
 
         return Ranker.retrieve_top_k(ranked_docs, k)
-        # ranked_results = sorted(relevant_docs.items(), key=lambda item: item[1], reverse=True)
-        # if k is not None:
-        #     ranked_results = ranked_results[:k]
-        # return [d[0] for d in ranked_results]
 
     @staticmethod
     def retrieve_top_k(sorted_relevant_doc, k):

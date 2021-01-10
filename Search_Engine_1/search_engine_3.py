@@ -1,6 +1,4 @@
-import pickle
 import pandas as pd
-import utils
 from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
@@ -10,22 +8,15 @@ from nltk.corpus import wordnet
 
 
 def word_net(terms):
-    # TODO: without corona
-    # TODO: think if save num of words or set
-    # TODO: לחשוב על דרך לתת למילים המוספות פחות משקל
     extended_terms = set()
     for query_word in terms:
-        # print("word: " + query_word)
         synset = wordnet.synsets(query_word)
         if len(synset) > 0:
             synset_lemmas = synset[0].lemmas()
-            # if len(synset_lemmas) > 2:synset_lemmas = synset_lemmas[:2]  # add not more than 3
-            # print("sort list is: ")
             syn = synset_lemmas[0]  # add only one
             name = syn.name()
             if name.islower() and not name.__contains__('_') and not name.__contains__('-') and name != "corona":
                 extended_terms.add(name)
-                # print(name)
     return list(extended_terms)
 
 
@@ -70,9 +61,6 @@ class SearchEngine:
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
 
-
-
-
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
     def load_index(self, fn):
@@ -111,7 +99,6 @@ class SearchEngine:
         extended_query = word_net(terms)
         searcher = Searcher(self._parser, self._indexer, model=self._model)
         return searcher.search_with_extension(query_as_list, extended_query, k)
-
 
 
 def main():

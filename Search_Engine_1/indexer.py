@@ -1,6 +1,4 @@
 import math
-import pickle
-
 import utils
 
 
@@ -44,10 +42,9 @@ class Indexer:
             except:
                 pass
 
-
         doc_term_dict.update(doc_entity_dict)
         self.doc_file[document.tweet_id] = document.get_doc_info()
-        self.doc_file[document.tweet_id][0]= doc_term_dict #doc_id : [ term_dict, date]
+        self.doc_file[document.tweet_id][0] = doc_term_dict  # doc_id : [ term_dict, date]
         Indexer.num_of_docs += 1
 
     def add_term(self, document, term):
@@ -70,7 +67,6 @@ class Indexer:
             change_upper_to_lower = True
             self.inverted_idx[term.upper()][0] += 1
 
-
         # add a new term to inverted_idx
         else:
             self.inverted_idx[term.lower()] = [1]
@@ -89,7 +85,6 @@ class Indexer:
             to_lower_idx = self.inverted_idx.pop(term.upper())
             self.inverted_idx[term.lower()] = to_lower_idx
 
-
     def add_entity(self, document, entity):
         """
         This function perform indexing process for all the terms in the document object.
@@ -98,18 +93,15 @@ class Indexer:
         :param document: curr document.
         :return: -
         """
-
         prev_entity = None
         # Update inverted index
         # entity already appear twice in corpus in lowerCase
         if entity.lower() in self.inverted_idx:
             self.inverted_idx[entity.lower()][0] += 1
 
-
         # entity already appear twice in corpus in upperCase
         elif entity.upper() in self.inverted_idx:
             self.inverted_idx[entity.upper()][0] += 1
-
 
         # second time in corpus - append both tweets to invert_idx and posting
         elif entity.upper() in self.entities:
@@ -118,7 +110,6 @@ class Indexer:
                 self.inverted_idx[entity.lower()][0] += 2
             else:
                 self.inverted_idx[entity.upper()] = [2]
-
 
         # first time entity in corpus
         else:
@@ -137,7 +128,6 @@ class Indexer:
                 self.postingDict[entity.lower()] = prev_entity[0]
             self.postingDict[entity.lower()] = {
                 document.tweet_id: self.get_info_for_posting(entity, document, False)}
-
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -241,5 +231,4 @@ class Indexer:
             df = document.entity_dict[word.upper()]
         # tf = int(df) / document.get_num_of_uniq_words()
         tf = int(df) / document.doc_length
-        # is_upper = word.isupper()  # TODO: check
         return [tf, df]

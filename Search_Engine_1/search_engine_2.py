@@ -1,8 +1,5 @@
-import pickle
-import time
 import pandas as pd
 from spellchecker import SpellChecker
-import utils
 from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
@@ -49,9 +46,6 @@ class SearchEngine:
         self._indexer.check_pending_list()
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
-
-
-
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
