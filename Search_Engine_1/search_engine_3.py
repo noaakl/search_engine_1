@@ -70,10 +70,6 @@ class SearchEngine:
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
 
-        # save inverted index
-        utils.save_obj(self._indexer.inverted_idx, "idx_bench")
-        # save posting dict
-        utils.save_obj(self._indexer.postingDict, "posting")
 
 
 

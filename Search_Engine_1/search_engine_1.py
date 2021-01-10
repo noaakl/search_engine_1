@@ -1,6 +1,5 @@
 import pickle
 import pandas as pd
-import utils
 from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
@@ -49,10 +48,6 @@ class SearchEngine:
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
 
-        # save inverted index
-        utils.save_obj(self._indexer.inverted_idx, "idx_bench")
-        # save posting dict
-        utils.save_obj(self._indexer.postingDict, "posting")
 
 
     # DO NOT MODIFY THIS SIGNATURE

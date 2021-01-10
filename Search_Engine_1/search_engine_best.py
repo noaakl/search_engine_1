@@ -1,15 +1,11 @@
 import pickle
-
 import pandas as pd
-
-import global_method
-import utils
 from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
 from indexer import Indexer
 from searcher import Searcher
-import json
+
 
 
 # DO NOT CHANGE THE CLASS NAME
@@ -53,12 +49,11 @@ class SearchEngine:
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
 
-        # save inverted index
-        utils.save_obj(self._indexer.inverted_idx, "idx_bench")
-        # save posting dict
-        utils.save_obj(self._indexer.postingDict, "posting")
-        print(len(self._indexer.inverted_idx))
-        print('Finished parsing and indexing.')
+        # # save inverted index
+        # utils.save_obj(self._indexer.inverted_idx, "idx_bench")
+        # # save posting dict
+        # utils.save_obj(self._indexer.postingDict, "posting")
+
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -97,6 +92,3 @@ class SearchEngine:
         searcher = Searcher(self._parser, self._indexer, model=self._model)
         return searcher.search(query_as_list, k)
 
-
-def main():
-    pass

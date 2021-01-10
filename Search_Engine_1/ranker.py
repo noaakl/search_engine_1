@@ -1,5 +1,3 @@
-# you can change whatever you want in this module, just make sure it doesn't 
-# break the searcher module
 import heapq
 import math
 from document import Document
@@ -82,8 +80,6 @@ class Ranker:
     def calculate_bm25(wiq, tf, idf, doc_len):
         k = 0.01
         b = 0.8
-        # k = 0.009
-        # b = 0.85
 
         avg_doc_len = Document.get_avg_doc_len()
         return (wiq * (k + 1) * tf * idf) / (tf + k * (1 - b + (b * doc_len / avg_doc_len)))

@@ -1,7 +1,6 @@
 from numbers_processor import NumbersProcessor
 from entity import Entity
 from nltk.corpus import stopwords
-from spellchecker import SpellChecker
 
 
 class TextProcessing:
@@ -13,7 +12,6 @@ class TextProcessing:
         my_stopwords.extend(
             ['^', '*', '&', ';', '~', 'etc', "=", "/", ")", "(", '_', '``', "''", "'", " ", ":", "?", '.', 'https', '!',
              ',', '"', '-', '+'])
-        # more stop word - probably not nesecery
         for w in my_stopwords:
             self.stop_words[w] = 0
         self.numbers = NumbersProcessor()
