@@ -1,4 +1,6 @@
 import pandas as pd
+
+from document import Document
 from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
@@ -35,6 +37,8 @@ class SearchEngine:
         documents_list = df.values.tolist()
         # Iterate over every document in the file
         number_of_documents = 0
+
+        Document.avg_doc_len = [0, 0]
 
         for idx, document in enumerate(documents_list):
             # parse the document

@@ -1,8 +1,12 @@
 import math
+import pickle
 import utils
 
 
 # DO NOT MODIFY CLASS NAME
+from document import Document
+
+
 class Indexer:
     num_of_docs = 0
     sum_of_appearances = 0
@@ -41,6 +45,9 @@ class Indexer:
                 self.add_entity(document, entity)
             except:
                 pass
+
+        Document.avg_doc_len[0] += document.get_num_of_uniq_words()
+        Document.avg_doc_len[1] += 1
 
         doc_term_dict.update(doc_entity_dict)
         self.doc_file[document.tweet_id] = document.get_doc_info()
