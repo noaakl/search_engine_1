@@ -9,7 +9,9 @@ from document import Document
 
 class Indexer:
     num_of_docs = 0
+    sum_of_len = 0
     sum_of_appearances = 0
+    avg_doc_len = 0
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -29,7 +31,6 @@ class Indexer:
         :param document: a document need to be indexed.
         :return: -
         """
-
         doc_term_dict = document.term_doc_dictionary
         doc_entity_dict = document.entity_dict
 
@@ -46,13 +47,12 @@ class Indexer:
             except:
                 pass
 
-        Document.avg_doc_len[0] += document.get_num_of_uniq_words()
-        Document.avg_doc_len[1] += 1
+        Indexer.num_of_docs += 1
+        Indexer.sum_of_len += document.get_num_of_uniq_words()
 
         doc_term_dict.update(doc_entity_dict)
         self.doc_file[document.tweet_id] = document.get_doc_info()
         self.doc_file[document.tweet_id][0] = doc_term_dict  # doc_id : [ term_dict, date]
-        Indexer.num_of_docs += 1
 
     def add_term(self, document, term):
         """
@@ -150,6 +150,7 @@ class Indexer:
         self.postingDict = indexer[1]
         self.doc_file = indexer[2]
         self.entities = {}
+        self.avg_doc_len = indexer[3]
 
     def save_index(self, fn):
         """
@@ -157,7 +158,8 @@ class Indexer:
         Input:
               fn - file name of pickled index.
         """
-        utils.save_obj([self.inverted_idx, self.postingDict, self.doc_file], fn)
+        avg_doc_len = Indexer.sum_of_len / Indexer.num_of_docs
+        utils.save_obj([self.inverted_idx, self.postingDict, self.doc_file, avg_doc_len], fn)
 
     # feel free to change the signature and/or implmentation of this function 
     # or drop altogether.
