@@ -81,7 +81,7 @@ class SearchEngine:
         """
         pass
 
-    def search(self, query, k=None):  # TODO: change
+    def search(self, query, k=None):
         """
         Executes a query over an existing index and returns the number of
         relevant docs and an ordered list of search results.
