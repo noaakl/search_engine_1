@@ -137,7 +137,8 @@ class Indexer:
         Input:
             fn - file name of pickled index.
         """
-        indexer = utils.load_obj(fn)
+        with open(fn, 'rb') as f:
+            indexer = pickle.load(f)
         self.inverted_idx = indexer[0]
         self.postingDict = indexer[1]
         self.doc_file = indexer[2]
