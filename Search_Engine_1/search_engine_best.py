@@ -1,11 +1,12 @@
 import pickle
 import pandas as pd
+
+import utils
 from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
 from indexer import Indexer
 from searcher import Searcher
-
 
 
 # DO NOT CHANGE THE CLASS NAME
@@ -48,6 +49,9 @@ class SearchEngine:
         self._indexer.check_pending_list()
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
+        # to_save = [self._indexer.inverted_idx, self._indexer.postingDict, self._indexer.doc_file]
+        # utils.save_obj(to_save,"idx_bench")
+
 
 
     # DO NOT MODIFY THIS SIGNATURE
@@ -86,3 +90,6 @@ class SearchEngine:
         searcher = Searcher(self._parser, self._indexer, model=self._model)
         return searcher.search(query_as_list, k)
 
+
+def main():
+    pass
