@@ -1,5 +1,7 @@
 import pickle
 import pandas as pd
+
+import utils
 from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
@@ -47,6 +49,8 @@ class SearchEngine:
         self._indexer.check_pending_list()
         self._indexer.calculate_and_add_idf()
         self._indexer.calculate_sigma_Wij()
+        # to_save = [self._indexer.inverted_idx, self._indexer.postingDict, self._indexer.doc_file]
+        # utils.save_obj(to_save,"idx_bench")
 
 
 
@@ -58,8 +62,7 @@ class SearchEngine:
         Input:
             fn - file name of pickled index.
         """
-        with open(fn, 'rb') as f:
-            return pickle.load(f)
+        self._indexer.load_index(fn)
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.

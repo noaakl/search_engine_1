@@ -1,15 +1,8 @@
-import pickle
-import time
-
 import pandas as pd
-
-import utils
-from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
 from indexer import Indexer
 from searcher import Searcher
-import json
 from nltk.corpus import lin_thesaurus as linthesaurus
 
 
@@ -19,7 +12,6 @@ def thesaurus(terms):
     for query_word in terms:
         if query_word == "trump":
             continue
-        # print("word: " + query_word)
         synonyms = linthesaurus.synonyms(query_word)
         for sim, keys in synonyms:
             if len(keys) > 1:
@@ -81,8 +73,7 @@ class SearchEngine:
         Input:
             fn - file name of pickled index.
         """
-        with open(fn, 'rb') as f:
-            return pickle.load(f)
+        self._indexer.load_index(fn)
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -112,7 +103,6 @@ class SearchEngine:
         extended_query = thesaurus(terms)
         searcher = Searcher(self._parser, self._indexer, model=self._model)
         return searcher.search_with_extension(query_as_list, extended_query, k)
-
 
 
 def main():

@@ -37,14 +37,13 @@ class Indexer:
                 self.add_term(document, term)
             except:
                 pass
-                # print('problem with the following key {}'.format(term))
 
         for entity in doc_entity_dict:
             try:
                 self.add_entity(document, entity)
             except:
                 pass
-                # print('problem with the following key {}'.format(entity))
+
 
         doc_term_dict.update(doc_entity_dict)
         self.doc_file[document.tweet_id] = document.get_doc_info()
@@ -59,21 +58,18 @@ class Indexer:
         :param document: curr document.
         :return: -
         """
-        # if term == "fuck":
-        #     noaa = 'stop'
         doc_term_dict = document.term_doc_dictionary
         # Update inverted index
         change_upper_to_lower = False
         # term is already in inverted_idx
         if term.lower() in self.inverted_idx:
             self.inverted_idx[term.lower()][0] += 1
-            # self.inverted_idx[term.lower()][1] += doc_term_dict[term]
 
         # term is already in inverted_idx as an entity
         elif term.upper() in self.inverted_idx:
             change_upper_to_lower = True
             self.inverted_idx[term.upper()][0] += 1
-            # self.inverted_idx[term.upper()][1] += doc_term_dict[term]
+
 
         # add a new term to inverted_idx
         else:
@@ -93,7 +89,6 @@ class Indexer:
             to_lower_idx = self.inverted_idx.pop(term.upper())
             self.inverted_idx[term.lower()] = to_lower_idx
 
-        # Indexer.sum_of_appearances += 1
 
     def add_entity(self, document, entity):
         """
@@ -103,28 +98,27 @@ class Indexer:
         :param document: curr document.
         :return: -
         """
-        # doc_entity_dict = document.entity_dict
+
         prev_entity = None
         # Update inverted index
         # entity already appear twice in corpus in lowerCase
         if entity.lower() in self.inverted_idx:
             self.inverted_idx[entity.lower()][0] += 1
-            # self.inverted_idx[entity.lower()][1] += doc_entity_dict[entity]
+
 
         # entity already appear twice in corpus in upperCase
         elif entity.upper() in self.inverted_idx:
             self.inverted_idx[entity.upper()][0] += 1
-            # self.inverted_idx[entity.upper()][1] += doc_entity_dict[entity]
+
 
         # second time in corpus - append both tweets to invert_idx and posting
         elif entity.upper() in self.entities:
             prev_entity = self.entities.pop(entity.upper())
             if entity.lower() in self.inverted_idx:
                 self.inverted_idx[entity.lower()][0] += 2
-                # self.inverted_idx[entity.lower()][1] += doc_entity_dict[entity] + prev_entity[1]
             else:
                 self.inverted_idx[entity.upper()] = [2]
-            # Indexer.sum_of_appearances += 1
+
 
         # first time entity in corpus
         else:
@@ -144,7 +138,6 @@ class Indexer:
             self.postingDict[entity.lower()] = {
                 document.tweet_id: self.get_info_for_posting(entity, document, False)}
 
-        # Indexer.sum_of_appearances += 1
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -154,8 +147,11 @@ class Indexer:
         Input:
             fn - file name of pickled index.
         """
-        with open(fn, 'rb') as f:
-            return pickle.load(f)
+        indexer = utils.load_obj(fn)
+        self.inverted_idx = indexer[0]
+        self.postingDict = indexer[1]
+        self.doc_file = indexer[2]
+        self.entities = {}
 
     def save_index(self, fn):
         """
@@ -163,7 +159,7 @@ class Indexer:
         Input:
               fn - file name of pickled index.
         """
-        utils.save_obj(self.inverted_idx, fn)
+        utils.save_obj([self.inverted_idx, self.postingDict, self.doc_file], fn)
 
     # feel free to change the signature and/or implmentation of this function 
     # or drop altogether.

@@ -54,7 +54,7 @@ class Searcher:
         index = self._indexer.get_index()
         relevant_docs = {}
         for term in query_as_list:
-            posting_list = self._indexer.get_term_posting_list(term)
+            posting_list = self._indexer.get_term_posting_list(term.lower())
 
             for doc_id, information in posting_list.items():  # information :[tf, df]
                 doc_info = self._indexer.get_doc_information(doc_id)

@@ -81,8 +81,7 @@ class SearchEngine:
         Input:
             fn - file name of pickled index.
         """
-        with open(fn, 'rb') as f:
-            return pickle.load(f)
+        self._indexer.load_index(fn)
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.

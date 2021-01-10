@@ -61,8 +61,7 @@ class SearchEngine:
         Input:
             fn - file name of pickled index.
         """
-        with open(fn, 'rb') as f:
-            return pickle.load(f)
+        self._indexer.load_index(fn)
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
@@ -85,7 +84,6 @@ class SearchEngine:
             a list of tweet_ids where the first element is the most relavant
             and the last is the least relevant result.
         """
-        start = time.time()
         terms, entities = self._parser.parse_sentence(query)
         query_as_list = terms + entities
         self.spell = SpellChecker()
