@@ -159,7 +159,7 @@ class Indexer:
         Input:
               fn - file name of pickled index.
         """
-        avg_doc_len = Indexer.sum_of_len / Indexer.num_of_docs
+        avg_doc_len = Indexer.avg_doc_len
         utils.save_obj([self.inverted_idx, self.postingDict, self.doc_file, avg_doc_len], fn)
 
     # feel free to change the signature and/or implmentation of this function 
