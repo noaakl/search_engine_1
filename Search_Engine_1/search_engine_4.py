@@ -98,6 +98,5 @@ class SearchEngine:
         for word in query:
             if word in correlated_words:
                 correlated_word = correlated_words[word][1]
-                print(word, correlated_word)
                 query_expanded.append(correlated_word)
         return query_expanded
