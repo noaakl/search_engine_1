@@ -1,6 +1,9 @@
 import heapq
 import math
+
+
 from document import Document
+from indexer import Indexer
 
 
 class Ranker:
@@ -77,6 +80,6 @@ class Ranker:
         k = 0.01
         b = 0.8
 
-        avg_doc_len = Document.get_avg_doc_len()
+        avg_doc_len = Indexer.avg_doc_len
         return (wiq * (k + 1) * tf * idf) / (tf + k * (1 - b + (b * doc_len / avg_doc_len)))
 

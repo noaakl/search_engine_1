@@ -49,6 +49,7 @@ class Indexer:
 
         Indexer.num_of_docs += 1
         Indexer.sum_of_len += document.get_num_of_uniq_words()
+        Indexer.avg_doc_len = Indexer.sum_of_len / Indexer.num_of_docs
 
         doc_term_dict.update(doc_entity_dict)
         self.doc_file[document.tweet_id] = document.get_doc_info()
