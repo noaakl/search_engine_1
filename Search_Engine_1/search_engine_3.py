@@ -75,7 +75,7 @@ class SearchEngine:
         # save posting dict
         utils.save_obj(self._indexer.postingDict, "posting")
 
-        print('Finished parsing and indexing.')
+
 
     # DO NOT MODIFY THIS SIGNATURE
     # You can change the internal implmentation as you see fit.
