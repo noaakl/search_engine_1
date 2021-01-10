@@ -1,7 +1,4 @@
 import pandas as pd
-
-from document import Document
-from reader import ReadFile
 from configuration import ConfigClass
 from parser_module import Parse
 from indexer import Indexer
@@ -40,8 +37,6 @@ class SearchEngine:
             parsed_document = self._parser.parse_doc(document)
             # index the document data
             self._indexer.add_new_doc(parsed_document)
-
-        self._indexer.avg_doc_len = self._indexer.sum_of_len / self._indexer.num_of_docs
 
         self._indexer.check_pending_list()
         self._indexer.calculate_and_add_idf()
